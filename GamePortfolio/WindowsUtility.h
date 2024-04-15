@@ -95,9 +95,14 @@ namespace WindowsUtility
 		LineTo(hdc, Tx, Ty);
 	}
 
+	struct FileHeader {
+		TCHAR szHeader[0x20];
+		int Version;
+	};
+
 	static void* Open() {
 		void* Buffer = NULL;
-		OPENFILENAME OFN = {sizeof(OFN),};
+		OPENFILENAME OFN = {sizeof(OPENFILENAME), };
 		TCHAR lpstrFile[MAX_PATH] = TEXT("");
 		
 		OFN.lpstrFile = lpstrFile;
@@ -118,10 +123,179 @@ namespace WindowsUtility
 			Buffer = (void*)malloc(dwFileSize);
 		}
 
-		ReadFile(hFile, Buffer, dwFileSize, &dwRead, NULL);
-		CloseHandle(hFile);
+		if (!ReadFile(hFile, Buffer, dwFileSize, &dwRead, NULL)) {
+			CloseHandle(hFile);
+			return NULL;
+		}
 
+		CloseHandle(hFile);
 		return Buffer;
+	}
+
+	static BOOL Write(const TCHAR* lpszFilePath, const TCHAR* format, ...) {
+		va_list Mark;
+		va_start(Mark, format);
+
+		DWORD dwWritten;
+		HANDLE hFile = CreateFile(lpszFilePath, GENERIC_WRITE, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+		if (hFile == INVALID_HANDLE_VALUE) { return FALSE; }
+
+		if (GetLastError() == ERROR_ALREADY_EXISTS) {
+			SetFilePointer(hFile, NULL, NULL, FILE_END);
+		}
+
+		TCHAR Buffer[0x400];
+		_vstprintf_s(Buffer, _SIZEOF(Buffer), format, Mark);
+		if (!WriteFile(hFile, Buffer, lstrlen(Buffer) * sizeof(TCHAR), &dwWritten, NULL)) {
+			CloseHandle(hFile);
+			return FALSE;
+		}
+
+		CloseHandle(hFile);
+		va_end(Mark);
+		return TRUE;
+	}
+
+	// Read(TEXT("DrawList.txt"), TEXT("%d"), &Count);
+	// Read(TEXT("DrawList.txt"), TEXT("(%d,%d)->(%d,%d)"), &pt1.x, &pt1.y, &pt2.x, &pt2.y);
+
+	static TCHAR* strchr(const TCHAR* String, const TCHAR Char) {
+		while (*String) {
+			if (*String == Char) { return (TCHAR*)String; }
+			String++;
+		}
+
+		return NULL;
+	}
+
+	static int strcmp(const TCHAR* String, const TCHAR* Pattern) {
+		TCHAR* L = (TCHAR*)String, * R = (TCHAR*)Pattern;
+
+		int ret = 0;
+		while (ret == 0 && *R) {
+			ret = *L - *R;
+			L++; R++;
+		}
+
+		int positive = (ret > 0);
+		int negative = (ret < 0);
+
+		if ((positive - negative) == 0) { return 0; }
+		if ((positive - negative) > 0) { return -1; }
+		if ((positive - negative) < 0) { return 1; }
+
+		return -2147483648;
+	}
+
+	typedef struct tag_MapObject {
+		HANDLE hFile;
+		HANDLE hMap;
+		TCHAR* Pointer;
+	}MapView;
+
+	static void CloseMapObject(MapView* DestroyTarget) {
+		if (DestroyTarget->Pointer) {
+			UnmapViewOfFile(DestroyTarget->Pointer);
+		}
+
+		if (DestroyTarget->hMap) {
+			CloseHandle(DestroyTarget->hMap);
+		}
+
+		if (DestroyTarget->hFile) {
+			CloseHandle(DestroyTarget->hFile);
+		}
+
+		free(DestroyTarget);
+	}
+
+	static MapView* GetPointer(const TCHAR* lpszFilePath) {
+		if (lpszFilePath == NULL) { return FALSE; }
+
+		MapView* ret = (MapView*)malloc(sizeof(MapView));
+
+		DWORD dwWritten;
+		ret->hFile = CreateFile(lpszFilePath, GENERIC_READ, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+		if (ret->hFile == INVALID_HANDLE_VALUE) { return FALSE; }
+
+		// TODO : 읽어들일 정수형 개수 확인했고 문서 읽은 후 데이터 전달받아서 인자로 전달
+		ret->hMap = CreateFileMapping(ret->hFile, NULL, PAGE_READONLY, 0, 0, NULL);
+		ret->Pointer = (TCHAR*)MapViewOfFile(ret->hMap, FILE_MAP_READ, 0, 0, 0);
+
+		return ret;
+	}
+
+	static void Read(MapView* Target, const TCHAR* format, ...) {
+		if (Target == NULL) { return; }
+		if (Target->hFile == INVALID_HANDLE_VALUE) { return; }
+		
+		va_list Mark;
+		va_start(Mark, format);
+		char* SetArguments = (char*)&format + sizeof(format);
+		
+		*SetArguments;
+
+		TCHAR* ptr = strchr(format, '%');
+		const TCHAR* INTFORM = TEXT("%d");
+
+		int Count = 0;
+		while (*ptr) {
+			if (strcmp(ptr, INTFORM)) {
+				Count++;
+			}
+			ptr = strchr(ptr + 1, '%');
+		}
+
+		TCHAR* Front = Target->Pointer;
+		for (Front; Count > 0 && *Front; Front++) {
+			if (*Front < '0' || *Front > '9') { continue; }
+
+			int ret = 0;
+			TCHAR* Rear = Front;
+
+			while (*Rear) {
+				if (*Rear >= '0' && *Rear <= '9') {
+					ret *= 10 + *Rear;
+				}
+				else {
+					Count--;
+					break;
+				}
+				Rear++;
+			}
+
+			*(*(int**)((SetArguments += sizeof(int*)) - sizeof(int*))) = ret;
+		}
+
+		va_end(Mark);
+	}
+
+	static BOOL SaveAs(const TCHAR* lpszFilePath, TCHAR* lpszContent) {
+		OPENFILENAME OFN = { sizeof(OPENFILENAME), };
+		TCHAR lpstrFile[MAX_PATH] = TEXT("");
+
+		OFN.lStructSize = sizeof(OPENFILENAME);
+		OFN.lpstrFile = lpstrFile;
+		OFN.lpstrFilter = TEXT("Text File(*.txt)\0*.txt\0Every File(*.*)\0*.*\0\0");
+		OFN.hwndOwner = HWND_DESKTOP;
+		OFN.nMaxFile = MAX_PATH;
+		OFN.lpstrDefExt = TEXT("txt");
+
+		if (GetSaveFileName(&OFN) == 0) {
+			return FALSE;
+		}
+
+		DWORD dwWritten;
+		HANDLE hFile = CreateFile(lpstrFile, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+		if (hFile == INVALID_HANDLE_VALUE) { return FALSE; }
+
+		if (!WriteFile(hFile, lpszContent, lstrlen(lpszContent) * sizeof(TCHAR), &dwWritten, NULL)){
+			CloseHandle(hFile);
+			return FALSE;
+		}
+
+		CloseHandle(hFile);
+		return TRUE;
 	}
 }
 

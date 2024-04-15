@@ -1,4 +1,5 @@
 #pragma once
+#define RELEASE_VERSION_INFO 100
 
 #include "targetver.h"
 #define WIN32_LEAN_AND_MEAN

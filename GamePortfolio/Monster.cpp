@@ -21,5 +21,5 @@ void Monster::Update(float dtSeconds) {
 }
 
 void Monster::Render(HDC hDC) {
-	WindowsUtility::DrawRect(hDC, _Position, 50, 50);
+	WindowsUtility::DrawCircle(hDC, _Position, 50);
 }

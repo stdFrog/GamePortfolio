@@ -39,13 +39,20 @@ public:
     InputManager& GetInputManager() { return _InputManager; }
     const InputManager& GetInputManager() const { return _InputManager; }
 
+private:
+    // 간단한 메시
+    std::unordered_map<std::wstring, std::unique_ptr<LineMesh>> _LineMeshes;
+    
 public:
+    void CreateLineMesh(std::wstring Name, std::wstring Path);
+    LineMesh& GetLineMesh(std::wstring Name) { return *_LineMeshes.at(Name).get(); }
+    const LineMesh& GetLineMesh(std::wstring Name) const { return *_LineMeshes.at(Name).get(); }
+
     // TODO :
     // Mesh, Camera, Texture, Input, GameObject, Load Resources
    /* bool _IsInitialized = false;
     CameraObject _MainCamera;
 
-    std::vector<std::unique_ptr<GameObject>> _Scene;
     std::unordered_map<std::size_t, std::unique_ptr<Mesh>> _Meshes;
     std::unordered_map<std::size_t, std::unique_ptr<Texture>> _Textures;
     std::unordered_map<std::string, GameObject*> _BoneGameObjectPtrs;

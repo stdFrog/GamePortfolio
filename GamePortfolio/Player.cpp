@@ -48,5 +48,8 @@ void Player::Update(float dtSeconds) {
 }
 
 void Player::Render(HDC hDC) {
-	WindowsUtility::DrawCircle(hDC, _Position, 100);
+	const auto& Engine = ((BaseScene*)_Scene)->GetInstance();
+	auto& player = ((GameEngine*)Engine)->GetLineMesh(L"Player");
+
+	player.Render(hDC, _Position);
 }

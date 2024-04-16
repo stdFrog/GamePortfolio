@@ -10,13 +10,14 @@ GameEngine::~GameEngine() {
 
 BOOL GameEngine::LoadResources() {
     // TODO : Mesh, Texture, Sprite Load
+    CreateLineMesh(L"Player", L"LineUnit.txt");
 
     return TRUE;
 }
 
 BOOL GameEngine::Initialize(HWND hWnd) {
     if (!_bSceneReady) {
-        _bSceneReady = ChangeScene(SceneType::EditScene);
+        _bSceneReady = ChangeScene(SceneType::GameScene);
     }
 
     if (!_bInputInitialized) {
@@ -68,4 +69,10 @@ BOOL GameEngine::ChangeScene(SceneType NewSceneType) {
     // _MainScene->SetInputInstance(this, &GameEngine::_InputManager);
 
     return _MainScene->Initialize();
+}
+
+void GameEngine::CreateLineMesh(std::wstring Name, std::wstring Path) {
+    LineMesh* Append = new LineMesh;
+    Append->Load(Path);
+    _LineMeshes[Name].reset(Append);
 }

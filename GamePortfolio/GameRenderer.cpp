@@ -3,15 +3,14 @@
 
 GameRenderer::GameRenderer(HWND hWnd) :
 	_hWnd(hWnd), _crt({ 0,0,0,0 }), _wrt({ 0, 0, 0, 0 }),
-	_hDC(NULL), _hMemDC(NULL), _hMap(NULL), _pMap(NULL),
-	_pRaster(NULL), _hOldBitmap(NULL), _hDIB(NULL), _MainEngine()
+	_hDC(NULL), _hMemDC(NULL), _pRaster(NULL), _hOldBitmap(NULL), _hDIB(NULL), _MainEngine() // _hMap(NULL), _pMap(NULL)
 {
 	
 }
 
 GameRenderer::~GameRenderer() {
-	if (_pMap) { UnmapViewOfFile(_pMap); }
-	if (_hMap) { CloseHandle(_hMap); }
+	// if (_pMap) { UnmapViewOfFile(_pMap); }
+	// if (_hMap) { CloseHandle(_hMap); }
 	ReleaseGDI();
 	// _CrtDumpMemoryLeaks();
 }

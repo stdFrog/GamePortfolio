@@ -132,6 +132,8 @@
   <ItemGroup>
     <ClInclude Include="DevScene.h" />
     <ClInclude Include="EditScene.h" />
+    <ClInclude Include="EngineHeaders.h" />
+    <ClInclude Include="Fortress.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GameMath.h" />
@@ -139,6 +141,7 @@
     <ClInclude Include="GameRenderer.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="InputManager.h" />
+    <ClInclude Include="LineMesh.h" />
     <ClInclude Include="LobiScene.h" />
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="Missile.h" />
@@ -149,6 +152,8 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="BaseScene.h" />
+    <ClInclude Include="ResourceBase.h" />
+    <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="SceneHeaders.h" />
     <ClInclude Include="StandardLibrary.h" />
     <ClInclude Include="targetver.h" />
@@ -158,12 +163,14 @@
   <ItemGroup>
     <ClCompile Include="DevScene.cpp" />
     <ClCompile Include="EditScene.cpp" />
+    <ClCompile Include="Fortress.cpp" />
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="GameMath.cpp" />
     <ClCompile Include="GamePortfolio.cpp" />
     <ClCompile Include="GameRenderer.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="LineMesh.cpp" />
     <ClCompile Include="LobiScene.cpp" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="Missile.cpp" />
@@ -174,6 +181,8 @@
     </ClCompile>
     <ClCompile Include="BaseScene.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="ResourceBase.cpp" />
+    <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="StandardLibrary.cpp" />
     <ClCompile Include="Vector.cpp" />
     <ClCompile Include="WindowsUitility.cpp" />

@@ -1,7 +1,7 @@
 #pragma once
 
 COLORREF SysColor[] = {
-	(COLORREF)INVALID_HANDLE_VALUE,
+	(COLORREF)-1,
 	RGB(0,0,0),
 	RGB(255,0,0),
 	RGB(0,255,0),
@@ -67,11 +67,10 @@ class EditScene : public BaseScene
 {
 private:
 	// Pen, Brush, Background, TextBk, ... Append Color Ref
-	std::vector<std::vector<EditObject>> _Objects;
-	std::vector<std::pair<POINT, POINT>> _Lines;
-
-	EditMode _CommonMode;
-	EditObject _CommonObject;
+	// std::vector<std::vector<EditObject>> _Objects;
+	LineMesh Line;
+	// EditMode _CommonMode;
+	// EditObject _CommonObject;
 
 	RECT _crt, wrt;
 	BOOL _bOrigin, _bPaint;

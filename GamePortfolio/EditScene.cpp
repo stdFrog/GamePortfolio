@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "EditScene.h"
-#include <fstream>
+#include "LineMesh.h"
 
 EditScene::EditScene() {
 
@@ -24,7 +24,7 @@ void EditScene::Update(float dtSeconds) {
 	if (Input.IsPressed(InputButton::LeftMouse)) {
 		POINT MousePosition = Input.GetMousePosition();
 
-		if (_CommonObject.Type == EditTool::ET_PAINT) {
+		if (0/*_CommonObject.Type == EditTool::ET_PAINT*/) {
 			GetClientRect(GetActiveWindow(), &_crt);
 			_StartPoint = MousePosition;
 			_bPaint = TRUE;
@@ -35,12 +35,12 @@ void EditScene::Update(float dtSeconds) {
 				_bOrigin = FALSE;
 			}
 			else {
-				if (_Lines.empty()) {
-					_Lines.push_back(std::make_pair(_LastPosition, MousePosition));
+				if (Line.GetLines().empty()) {
+					Line.GetLines().push_back(std::make_pair(_LastPosition, MousePosition));
 				}
 				else {
 					if (_LastPosition.x != MousePosition.x && _LastPosition.y != MousePosition.y) {
-						_Lines.push_back(std::make_pair(_LastPosition, MousePosition));
+						Line.GetLines().push_back(std::make_pair(_LastPosition, MousePosition));
 					}
 				}
 				_LastPosition = MousePosition;
@@ -53,77 +53,36 @@ void EditScene::Update(float dtSeconds) {
 	}
 
 	if (Input.IsPressed(InputButton::S)) {
-		std::wofstream File;
-		File.open(L"LineUnit.txt");
-
-		POINT Min, Max;
-		Min.x = INT32_MIN;
-		Min.y = INT32_MIN;
-		Max.x = INT32_MAX;
-		Max.y = INT32_MAX;
-
-		// 라인 개수
-		File << static_cast<int>(_Lines.size()) << std::endl;
-
-		for (auto& Line : _Lines) {
-			POINT From = Line.first;
-			POINT To = Line.second;
-
-			Min.x = min(min(Min.x, From.x), To.x);
-			Min.y = min(min(Min.y, From.y), To.x);
-			Max.x = max(max(Max.x, From.x), To.x);
-			Max.y = max(max(Max.y, From.y), To.x);
-
-			std::wstring String = std::format(L"({0},{1})->({2},{3})", From.x, From.y, To.x, To.y);
-			File << String << std::endl;
-		}
-
-		File.close();
+		Line.Save(L"LineUnit.txt");
 	}
 
 	if (Input.IsPressed(InputButton::W)) {
-		std::wifstream File;
-		File.open(L"LineUnit.txt");
-
-		int Count;
-		File >> Count;
-
-		_Lines.clear();
-		for (int i = 0; i < Count; i++) {
-			POINT pt1, pt2;
-
-			std::wstring String;
-			File >> String;
-			swscanf_s(String.c_str(), L"(%d,%d)->(%d,%d)", &pt1.x, &pt1.y, &pt2.x, &pt2.y);
-
-			_Lines.push_back(std::make_pair(pt1, pt2));
-			_bOrigin = TRUE;
-		}
-
-		File.close();
+		Line = Engine->GetLineMesh(L"Player");
+		_bOrigin = TRUE;
 	}
 
 	if (Input.IsPressed(InputButton::SpaceBar)) {
-		_Lines.clear();
+		Line.GetLines().clear();
 		InvalidateRect(GetActiveWindow(), NULL, TRUE);
 	}
 }
 
 void EditScene::Render(HDC hDC) {
-	for (auto& Line : _Lines) {
-		POINT p1 = Line.first, p2 = Line.second;
+	for (auto it = Line.GetLines().begin(); it != Line.GetLines().end(); it++) {
+		auto& temp = *it;
+		POINT p1 = temp.first, pt2 = temp.second;
 
-		Vector From((float)p1.x, (float)p1.y);
-		Vector To((float)p2.x, (float)p2.y);
+		Vector From(temp.first.x, temp.first.y);
+		Vector To(temp.second.x, temp.second.y);
 
 		WindowsUtility::DrawLine(hDC, From, To);
 	}
 
-	if (_bPaint) {
+	/*if (_bPaint) {
 		_bPaint = FALSE;
 		COLORREF StartColor = GetPixel(hDC, _StartPoint.x, _StartPoint.y);
 		Fill(hDC, _StartPoint, StartColor, _CommonObject.PlaneColor);
-	}
+	}*/
 }
 
 void EditScene::Fill(HDC hdc, POINT StartPoint, COLORREF StartColor, COLORREF FillColor) {
@@ -133,6 +92,8 @@ void EditScene::Fill(HDC hdc, POINT StartPoint, COLORREF StartColor, COLORREF Fi
 }
 
 void EditScene::Fill(HDC hdc, int x, int y, COLORREF StartColor, COLORREF FillColor) {
+	// 에디트 씬 제대로 만들거면 최적화 필요
+	// 여기선 실습에 목적을 두고 더 이상 진행하지 않음
 	if (x < 0 || x > _crt.right || y < 0 || y > _crt.bottom) { return; }
 
 	static int dx[] = { 0, 1, 0, -1 };

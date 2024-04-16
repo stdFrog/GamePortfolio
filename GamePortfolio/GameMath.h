@@ -3,6 +3,7 @@
 
 class GameMath
 {
+public:
     static const double PI;
     static const double TwoPI;
     static const double HalfPI;

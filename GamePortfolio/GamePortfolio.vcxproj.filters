@@ -48,6 +48,9 @@
     <Filter Include="소스 파일\01.Main\01-2.Child">
       <UniqueIdentifier>{aefee5b2-da1a-42ae-8d7a-06141e757d1a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\TempForlder">
+      <UniqueIdentifier>{b2a25710-77c6-4ee8-8596-ab7136a9e995}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -122,6 +125,21 @@
     <ClInclude Include="EditScene.h">
       <Filter>소스 파일\06.Scenes</Filter>
     </ClInclude>
+    <ClInclude Include="Fortress.h">
+      <Filter>소스 파일\TempForlder</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceBase.h">
+      <Filter>소스 파일\TempForlder</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>소스 파일\TempForlder</Filter>
+    </ClInclude>
+    <ClInclude Include="LineMesh.h">
+      <Filter>소스 파일\04.GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineHeaders.h">
+      <Filter>소스 파일\04.GameEngine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GamePortfolio.cpp">
@@ -180,6 +198,18 @@
     </ClCompile>
     <ClCompile Include="EditScene.cpp">
       <Filter>소스 파일\06.Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Fortress.cpp">
+      <Filter>소스 파일\TempForlder</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceBase.cpp">
+      <Filter>소스 파일\TempForlder</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>소스 파일\TempForlder</Filter>
+    </ClCompile>
+    <ClCompile Include="LineMesh.cpp">
+      <Filter>소스 파일\04.GameEngine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

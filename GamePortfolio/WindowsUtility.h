@@ -214,7 +214,6 @@ namespace WindowsUtility
 
 		MapView* ret = (MapView*)malloc(sizeof(MapView));
 
-		DWORD dwWritten;
 		ret->hFile = CreateFile(lpszFilePath, GENERIC_READ, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 		if (ret->hFile == INVALID_HANDLE_VALUE) { return FALSE; }
 
@@ -233,8 +232,6 @@ namespace WindowsUtility
 		va_start(Mark, format);
 		char* SetArguments = (char*)&format + sizeof(format);
 		
-		*SetArguments;
-
 		TCHAR* ptr = strchr(format, '%');
 		const TCHAR* INTFORM = TEXT("%d");
 

@@ -20,8 +20,9 @@
 
 // Common User Defines Library
 #include "ObjectHeaders.h"
+#include "LineMesh.h"
 #include "SceneHeaders.h"
-#include "GameEngine.h"
+#include "EngineHeaders.h"
 #include "GameRenderer.h"
 
 #define _CRTDBG_MAP_ALLOC

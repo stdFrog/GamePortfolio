@@ -144,6 +144,7 @@
     <ClInclude Include="LineMesh.h" />
     <ClInclude Include="LobiScene.h" />
     <ClInclude Include="MainWindow.h" />
+    <ClInclude Include="Matrix.h" />
     <ClInclude Include="Missile.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="ObjectHeaders.h" />
@@ -173,6 +174,7 @@
     <ClCompile Include="LineMesh.cpp" />
     <ClCompile Include="LobiScene.cpp" />
     <ClCompile Include="MainWindow.cpp" />
+    <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="Missile.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="ObjectInterface.cpp" />

@@ -140,6 +140,9 @@
     <ClInclude Include="EngineHeaders.h">
       <Filter>소스 파일\04.GameEngine</Filter>
     </ClInclude>
+    <ClInclude Include="Matrix.h">
+      <Filter>소스 파일\03.GameMath</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GamePortfolio.cpp">
@@ -210,6 +213,9 @@
     </ClCompile>
     <ClCompile Include="LineMesh.cpp">
       <Filter>소스 파일\04.GameEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Matrix.cpp">
+      <Filter>소스 파일\03.GameMath</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

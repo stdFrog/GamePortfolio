@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "Fortress.h"
 
 DevScene::DevScene() {
 	
@@ -13,6 +14,7 @@ BOOL DevScene::Initialize() {
 }
 
 void DevScene::Update(float dtSeconds) {
+	
 	
 }
 

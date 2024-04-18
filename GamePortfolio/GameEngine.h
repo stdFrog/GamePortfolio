@@ -22,14 +22,13 @@ private:
     */
     std::unique_ptr<BaseScene> _MainScene;
     SceneType _CurrentScene = SceneType::None;
+
+public:
     BOOL ChangeScene(SceneType NewSceneType);
 
-    /*
 public:
-    SceneType GetCurrentSceneType() { return _CurrentScene; }
     std::unique_ptr<BaseScene>& GetCurrentScene() { return _MainScene; }
     const std::unique_ptr<BaseScene>&  GetCurrentScene() const { return _MainScene;}
-    */
 
 private:
     InputManager _InputManager;
@@ -44,9 +43,9 @@ private:
     std::unordered_map<std::wstring, std::unique_ptr<LineMesh>> _LineMeshes;
     
 public:
-    void CreateLineMesh(std::wstring Name, std::wstring Path);
-    LineMesh& GetLineMesh(std::wstring Name) { return *_LineMeshes.at(Name).get(); }
-    const LineMesh& GetLineMesh(std::wstring Name) const { return *_LineMeshes.at(Name).get(); }
+    void CreateLineMesh(const std::wstring& Name, const std::wstring& Path);
+    LineMesh& GetLineMesh(const std::wstring& Name) { return *_LineMeshes.at(Name).get(); }
+    const LineMesh& GetLineMesh(const std::wstring& Name) const { return *_LineMeshes.at(Name).get(); }
 
     // TODO :
     // Mesh, Camera, Texture, Input, GameObject, Load Resources

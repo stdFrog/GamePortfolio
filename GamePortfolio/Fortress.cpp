@@ -1,20 +1,19 @@
 #include "pch.h"
 #include "Fortress.h"
-#include "GameMath.h"
 
-const int GWinSizeX = 1024;
-const int GWinSizeY = 768;
-
-const int GMinimapSizeX = 200;
-const int GMinimapSizeY = 128;
-
-void Fortress::Init()
+BOOL Fortress::Initialize(void* Instance)
 {
 	_windPercent = 50;
 	_staminaPercent = 40;
-	_remainTime = 7;
+	_remainTime = 10;
 	_playerAngle = 0.f;
 	_barrelAngle = 20.f;
+
+	_Instance = Instance;
+	_hWnd = GetForegroundWindow();
+	WindowsUtility::GetWindowSize(_hWnd, &Width, &Height);
+
+	return TRUE;
 }
 
 void Fortress::Render(HDC hdc)
@@ -31,9 +30,8 @@ void Fortress::Render(HDC hdc)
 
 void Fortress::RenderBackground(HDC hdc)
 {
-	/*const LineMesh* mesh = GET_SINGLE(ResourceManager)->GetLineMesh(L"UI");
-	if (mesh)
-		mesh->Render(hdc, Pos{ 0, 0 });*/
+	LineMesh Line = ((GameEngine*)_Instance)->GetLineMesh(L"UI");
+	Line.Render(hdc, Vector{ 0, 0 });
 }
 
 void Fortress::RenderWind(HDC hdc)
@@ -69,60 +67,58 @@ void Fortress::RenderWind(HDC hdc)
 
 void Fortress::RenderPower(HDC hdc)
 {
-	{
-		RECT rect = {};
-		rect.left = static_cast<LONG>(265.0f / 800 * GWinSizeX);
-		rect.top = static_cast<LONG>(505.0f / 600 * GWinSizeY);
-		rect.right = static_cast<LONG>(680.0f / 800 * GWinSizeX);
-		rect.bottom = static_cast<LONG>(535.0f / 600 * GWinSizeY);
-		::Rectangle(hdc, rect.left, rect.top, rect.right, rect.bottom);
-	}
+	
+	RECT prt = {};
+	prt.left = static_cast<LONG>((265.0f / 800) * GWinSizeX);
+	prt.top = static_cast<LONG>((505.0f / 600) * GWinSizeY);
+	prt.right = static_cast<LONG>((680.0f / 800) * GWinSizeX);
+	prt.bottom = static_cast<LONG>((535.0f / 600) * GWinSizeY);
+	::Rectangle(hdc, prt.left, prt.top, prt.right, prt.bottom);
+	
 
-	{
-		RECT rect = {};
-		rect.left = static_cast<LONG>(270.0f / 800 * GWinSizeX);
-		rect.top = static_cast<LONG>(510.0f / 600 * GWinSizeY);
-		rect.right = static_cast<LONG>(270.0f / 800 * GWinSizeX + _powerPercent * 4);
-		rect.bottom = static_cast<LONG>(530.0f / 600 * GWinSizeY);
+	
+	RECT prt2 = {};
+	prt2.left = static_cast<LONG>((270.0f / 800) * GWinSizeX);
+	prt2.top = static_cast<LONG>((510.0f / 600) * GWinSizeY);
+	prt2.right = static_cast<LONG>((270.0f / 800) * GWinSizeX + _powerPercent * 4);
+	prt2.bottom = static_cast<LONG>((530.0f / 600) * GWinSizeY);
 
-		HBRUSH Brush, oBrush;
-		Brush = ::CreateSolidBrush(RGB(255, 216, 216));
-		oBrush = (HBRUSH)::SelectObject(hdc, Brush);
+	HBRUSH Brush, oBrush;
+	Brush = ::CreateSolidBrush(RGB(255, 216, 216));
+	oBrush = (HBRUSH)::SelectObject(hdc, Brush);
 
-		::Rectangle(hdc, rect.left, rect.top, rect.right, rect.bottom);
+	::Rectangle(hdc, prt2.left, prt2.top, prt2.right, prt2.bottom);
 
-		::SelectObject(hdc, oBrush);
-		::DeleteObject(Brush);
-	}
+	::SelectObject(hdc, oBrush);
+	::DeleteObject(Brush);
+	
 }
 
 void Fortress::RenderStamina(HDC hdc)
 {
-	{
-		RECT rect = {};
-		rect.left = static_cast<LONG>(265.0f / 800 * GWinSizeX);
-		rect.top = static_cast<LONG>(538.0f / 600 * GWinSizeY);
-		rect.right = static_cast<LONG>(680.0f / 800 * GWinSizeX);
-		rect.bottom = static_cast<LONG>(568.0f / 600 * GWinSizeY);
-		::Rectangle(hdc, rect.left, rect.top, rect.right, rect.bottom);
-	}
-	{
-		RECT rect = {};
-		rect.left = static_cast<long>(270.0f / 800 * GWinSizeX);
-		rect.top = static_cast<long>(543.0f / 600 * GWinSizeY);
+	
+	RECT srt = {};
+	srt.left = static_cast<LONG>(265.0f / 800 * GWinSizeX);
+	srt.top = static_cast<LONG>(538.0f / 600 * GWinSizeY);
+	srt.right = static_cast<LONG>(680.0f / 800 * GWinSizeX);
+	srt.bottom = static_cast<LONG>(568.0f / 600 * GWinSizeY);
+	::Rectangle(hdc, srt.left, srt.top, srt.right, srt.bottom);
+	
+	RECT srt2 = {};
+	srt2.left = static_cast<long>(270.0f / 800 * GWinSizeX);
+	srt2.top = static_cast<long>(543.0f / 600 * GWinSizeY);
 
-		rect.right = static_cast<long>(270.0f / 800 * GWinSizeX + _staminaPercent * 4);
+	srt2.right = static_cast<long>(270.0f / 800 * GWinSizeX + _staminaPercent * 4);
 
-		rect.bottom = static_cast<long>(563.0f / 600 * GWinSizeY);
+	srt2.bottom = static_cast<long>(563.0f / 600 * GWinSizeY);
 
-		HBRUSH brush = ::CreateSolidBrush(RGB(250, 236, 197));
-		HBRUSH oldBrush = (HBRUSH)::SelectObject(hdc, brush);
+	HBRUSH brush = ::CreateSolidBrush(RGB(250, 236, 197));
+	HBRUSH oldBrush = (HBRUSH)::SelectObject(hdc, brush);
 
-		::Rectangle(hdc, rect.left, rect.top, rect.right, rect.bottom);
+	::Rectangle(hdc, srt2.left, srt2.top, srt2.right, srt2.bottom);
 
-		::SelectObject(hdc, oldBrush);
-		::DeleteObject(brush);
-	}
+	::SelectObject(hdc, oldBrush);
+	::DeleteObject(brush);
 }
 
 void Fortress::RenderTime(HDC hdc)
@@ -159,22 +155,31 @@ void Fortress::RenderAngle(HDC hdc)
 	::MoveToEx(hdc, 96, 520, nullptr);
 	::Ellipse(hdc, 96 - 35, 520 - 35, 96 + 35, 520 + 35);
 
-	::MoveToEx(hdc, 96, 520, nullptr);
-	::LineTo(hdc
-		, static_cast<int>(96 + 30 * ::cos(_playerAngle * GameMath::PI / 180.f))
-		, static_cast<int>(520 - 30 * ::sin(_playerAngle * GameMath::PI / 180.f)));
+	{
+		HPEN MyPen = ::CreatePen(PS_SOLID, 0, RGB(0, 0, 255));
+		HPEN pOldPen = (HPEN)::SelectObject(hdc, MyPen);
 
-	HPEN MyPen = ::CreatePen(PS_SOLID, 0, RGB(204, 61, 61));
-	HPEN pOldPen = (HPEN)::SelectObject(hdc, MyPen);
+		::MoveToEx(hdc, 96, 520, nullptr);
+		::LineTo(hdc,
+			static_cast<int>(96 + 30 * ::cos(_playerAngle * GameMath::PI / 180.f)),
+			static_cast<int>(520 - 30 * ::sin(_playerAngle * GameMath::PI / 180.f)));
 
-	::MoveToEx(hdc, 96, 520, nullptr);
+		::SelectObject(hdc, pOldPen);
+		::DeleteObject(MyPen);
+	}
 
-	::LineTo(hdc
-		, static_cast<int>(96 + 30 * ::cos(_barrelAngle * GameMath::PI / 180.f))
-		, static_cast<int>(520 + -30 * ::sin(_barrelAngle * GameMath::PI / 180.f)));
+	{
+		HPEN MyPen = ::CreatePen(PS_SOLID, 0, RGB(204, 61, 61));
+		HPEN pOldPen = (HPEN)::SelectObject(hdc, MyPen);
 
-	::SelectObject(hdc, pOldPen);
-	::DeleteObject(MyPen);
+		::MoveToEx(hdc, 96, 520, nullptr);
+		::LineTo(hdc,
+			static_cast<int>(96 + 30 * ::cos(_barrelAngle * GameMath::PI / 180.f)),
+			static_cast<int>(520 + -30 * ::sin(_barrelAngle * GameMath::PI / 180.f)));
+
+		::SelectObject(hdc, pOldPen);
+		::DeleteObject(MyPen);
+	}
 }
 
 void Fortress::RenderWeaponChoice(HDC hdc)

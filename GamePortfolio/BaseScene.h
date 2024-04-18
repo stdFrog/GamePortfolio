@@ -8,6 +8,8 @@ enum class SceneType {
 	GameScene,
 	EditScene,
 	LobiScene,
+	MenuScene,
+	FortressScene,
 
 	LastScene,
 	LAST_SCENE_COUNT = LastScene

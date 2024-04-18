@@ -2,6 +2,14 @@
 
 class Fortress
 {
+public:
+	const int GWinSizeX = 1024;
+	const int GWinSizeY = 768;
+
+	const int GMinimapSizeX = 200;
+	const int GMinimapSizeY = 128;
+
+private:
 	float _windPercent = 0; // [-100~100]
 	float _powerPercent = 0;
 	float _staminaPercent = 0;
@@ -9,6 +17,10 @@ class Fortress
 	float _barrelAngle = 0;
 	bool _specialWeapon = false;
 	int _remainTime = 0;
+
+	HWND _hWnd;
+	void* _Instance;
+	LONG Width, Height;
 
 private:
 	void RenderBackground(HDC hdc);
@@ -19,10 +31,10 @@ private:
 	void RenderAngle(HDC hdc);
 	void RenderWeaponChoice(HDC hdc);
 	void RenderMiniMap(HDC hdc);
-
+	
 public:
-	void Init();
-	void Render(HDC hdc);
+	BOOL Initialize(void*);
+	void Render(HDC);
 
 public:
 	void SetWindPercent(float windPercent) { _windPercent = windPercent; }

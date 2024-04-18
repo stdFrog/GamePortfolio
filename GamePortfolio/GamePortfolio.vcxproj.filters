@@ -143,6 +143,13 @@
     <ClInclude Include="Matrix.h">
       <Filter>소스 파일\03.GameMath</Filter>
     </ClInclude>
+    <ClInclude Include="MenuScene.h">
+      <Filter>소스 파일\06.Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="FortressScene.h">
+      <Filter>소스 파일\06.Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GamePortfolio.cpp">
@@ -216,6 +223,15 @@
     </ClCompile>
     <ClCompile Include="Matrix.cpp">
       <Filter>소스 파일\03.GameMath</Filter>
+    </ClCompile>
+    <ClCompile Include="FortressScene.cpp">
+      <Filter>소스 파일\06.Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuScene.cpp">
+      <Filter>소스 파일\06.Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -130,10 +130,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="DevScene.h" />
     <ClInclude Include="EditScene.h" />
     <ClInclude Include="EngineHeaders.h" />
+    <ClInclude Include="Enums.h" />
     <ClInclude Include="Fortress.h" />
+    <ClInclude Include="FortressScene.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GameMath.h" />
@@ -145,6 +148,7 @@
     <ClInclude Include="LobiScene.h" />
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="Matrix.h" />
+    <ClInclude Include="MenuScene.h" />
     <ClInclude Include="Missile.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="ObjectHeaders.h" />
@@ -154,7 +158,6 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="BaseScene.h" />
     <ClInclude Include="ResourceBase.h" />
-    <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="SceneHeaders.h" />
     <ClInclude Include="StandardLibrary.h" />
     <ClInclude Include="targetver.h" />
@@ -162,9 +165,11 @@
     <ClInclude Include="WindowsUtility.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="DevScene.cpp" />
     <ClCompile Include="EditScene.cpp" />
     <ClCompile Include="Fortress.cpp" />
+    <ClCompile Include="FortressScene.cpp" />
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="GameMath.cpp" />
     <ClCompile Include="GamePortfolio.cpp" />
@@ -175,6 +180,7 @@
     <ClCompile Include="LobiScene.cpp" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="Matrix.cpp" />
+    <ClCompile Include="MenuScene.cpp" />
     <ClCompile Include="Missile.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="ObjectInterface.cpp" />
@@ -184,7 +190,6 @@
     <ClCompile Include="BaseScene.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="ResourceBase.cpp" />
-    <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="StandardLibrary.cpp" />
     <ClCompile Include="Vector.cpp" />
     <ClCompile Include="WindowsUitility.cpp" />

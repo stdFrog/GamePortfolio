@@ -5,6 +5,14 @@
 
 namespace WindowsUtility
 {
+	static void GetWindowSize(HWND hWnd, LONG* Width, LONG* Height) {
+		RECT crt;
+
+		GetClientRect(hWnd, &crt);
+		*Width = crt.right - crt.left;
+		*Height = crt.bottom - crt.top;
+	}
+
 	static void SetWindowTitle(HWND hWnd, float FPS) {
 		TCHAR str[128];
 		_stprintf_s(str, TEXT("[%.4f fps]"), FPS);

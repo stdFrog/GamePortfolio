@@ -11,13 +11,17 @@ GameEngine::~GameEngine() {
 BOOL GameEngine::LoadResources() {
     // TODO : Mesh, Texture, Sprite Load
     CreateLineMesh(L"Player", L"LineUnit.txt");
+    CreateLineMesh(L"UI", L"UI.txt");
+    CreateLineMesh(L"Menu", L"Menu.txt");
+    CreateLineMesh(L"MissileTank", L"MissileTank.txt");
+    CreateLineMesh(L"CanonTank", L"CanonTank.txt");
 
     return TRUE;
 }
 
 BOOL GameEngine::Initialize(HWND hWnd) {
     if (!_bSceneReady) {
-        _bSceneReady = ChangeScene(SceneType::GameScene);
+        _bSceneReady = ChangeScene(SceneType::MenuScene);
     }
 
     if (!_bInputInitialized) {
@@ -61,6 +65,14 @@ BOOL GameEngine::ChangeScene(SceneType NewSceneType) {
     case SceneType::EditScene:
         _NewScene = new EditScene();
         break;
+
+    case SceneType::MenuScene:
+        _NewScene = new MenuScene();
+        break;
+
+    case SceneType::FortressScene:
+        _NewScene = new FortressScene();
+        break;
     }
 
     _MainScene.reset(_NewScene);
@@ -71,7 +83,7 @@ BOOL GameEngine::ChangeScene(SceneType NewSceneType) {
     return _MainScene->Initialize();
 }
 
-void GameEngine::CreateLineMesh(std::wstring Name, std::wstring Path) {
+void GameEngine::CreateLineMesh(const std::wstring& Name, const std::wstring& Path) {
     LineMesh* Append = new LineMesh;
     Append->Load(Path);
     _LineMeshes[Name].reset(Append);

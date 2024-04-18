@@ -18,15 +18,26 @@ struct Status {
 	float Speed = 0.f;
 };
 
+enum class Direction {
+	Left,
+	Right,
+
+	DIRECTION_TYPE_LAST_COUNT
+};
+
 class ObjectInterface
 {
 	BOOL _bInitialized;
 
 protected:
+	BaseScene* _Scene;
+	
 	ObjectType _Type = ObjectType::None;
+	Direction _Direction = Direction::Left;
+
 	Vector _Position;
 	Status _Status;
-	BaseScene* _Scene;
+	float _Radius = 50.f;				// Collision
 
 public:
 	ObjectType GetObjectType() { return _Type; }

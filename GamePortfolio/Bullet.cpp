@@ -17,18 +17,42 @@ BOOL Bullet::Initialize() {
 
 void Bullet::Update(float dtSeconds) {
 	FortressScene* Scene = dynamic_cast<FortressScene*>(_Scene);
+	if (Scene == NULL) { return; }
 	
-	if (Scene){
-		// Wind, Gravity
-		auto& UI = Scene->GetUserInterface();
+	auto& UI = Scene->GetUserInterface();
 
-		_Position += _Speed * dtSeconds;
-		if (_Position.y > UI.GWinSizeY * 1.5 || _Position.y < (-UI.GWinSizeY) * 1.5) {
+	// Gravity(=Accel)
+	Vector G(0, 800.f * dtSeconds);
+	_Speed += G;
+
+	// Wind
+	Vector Wind(UI.GetWindPercent() * 10.f * dtSeconds, 0.f);
+	_Speed += Wind;
+
+	_Position += _Speed * dtSeconds;
+	for (ObjectInterface* Object : _Scene->GetObjects()) {
+		if (Object->GetObjectType() != ObjectType::Player) {
+			continue;
+		}
+		if (Object == _Owner) {
+			continue;
+		}
+
+		Vector Dest = _Position - Object->GetPosition();
+		if (Dest.length() < _Radius + Object->GetRadius()) {
+			// 피격 이미지, 피격 데미지 등등 애니메이션이나 필요한 처리 추가
 			Scene->ChangePlayerTurn();
-			
+
 			((BaseScene*)_Scene)->RemoveObject(this);
 			return;
 		}
+	}
+
+	if (_Position.y > UI.GWinSizeY * 1.5 || _Position.y < (-UI.GWinSizeY) * 1.5) {
+		Scene->ChangePlayerTurn();
+			
+		((BaseScene*)_Scene)->RemoveObject(this);
+		return;
 	}
 }
 

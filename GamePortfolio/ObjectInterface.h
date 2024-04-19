@@ -45,6 +45,7 @@ public:
 	void SetPosition(Vector Position) { _Position = Position; }
 	void SetScene(BaseScene* Scene) { _Scene = Scene; }
 	void SetInitializeState(BOOL bState) { _bInitialized = bState; }
+	float GetRadius() { return _Radius; }
 
 public:
 	ObjectInterface(ObjectType Type = ObjectType::None);

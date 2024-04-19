@@ -70,6 +70,7 @@ void Player::Update(float dtSeconds) {
 		// TODO : +물리적 연산
 		Bullet* bullet = ((BaseScene*)_Scene)->CreateObject<Bullet>();
 		bullet->SetPosition(_Position);
+		bullet->SetOwner(this);
 		bullet->SetSpeed(Vector(speed * cos(angle * GameMath::PI / 180.f), -1 * speed * sin(angle * GameMath::PI / 180.f)));
 		((BaseScene*)_Scene)->AppendObject(bullet);
 	}

@@ -68,7 +68,7 @@ class EditScene : public BaseScene
 private:
 	// Pen, Brush, Background, TextBk, ... Append Color Ref
 	// std::vector<std::vector<EditObject>> _Objects;
-	LineMesh Line;
+	std::vector<std::pair<POINT, POINT>> _Lines;
 	// EditMode _CommonMode;
 	// EditObject _CommonObject;
 

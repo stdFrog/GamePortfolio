@@ -1,30 +1,56 @@
 #include "pch.h"
 #include "ResourceManager.h"
-#include "LineMesh.h"
+#include "Texture.h"
+#include "Sprite.h"
 
 ResourceManager::~ResourceManager() {
 	Clear();
 }
 
-void ResourceManager::Init() {
-	LineMesh* mesh = new LineMesh();
-	mesh->Load(L"LineUnit.txt");
-
-	_LineMeshes[L"LineUnit"] = mesh;
+void ResourceManager::Init(HWND hWnd, std::filesystem::path ResourcePath) {
+	_hWnd = hWnd;
+	_ResourcePath = ResourcePath;
 }
 
 void ResourceManager::Clear() {
-	for (auto mesh : _LineMeshes) {
-		delete mesh.second;
-		mesh.second = NULL;
+	for (auto& Item : _Textures) {
+		delete Item.second;
+		Item.second = NULL;
 	}
+
+	_Textures.clear();
 }
 
-const LineMesh* ResourceManager::GetLineMesh(std::wstring Key) {
-	auto Find = _LineMeshes.find(Key);
-	if (Find == _LineMeshes.end()){
-		return nullptr;
+Texture* ResourceManager::LoadTexture(const std::wstring& Hash, const std::wstring& Path, int Transparent) {
+	if (_Textures.find(Hash) != _Textures.end()) {
+		return _Textures[Hash];
 	}
 
-	return Find->second;
+	std::filesystem::path FullPath = _ResourcePath / Path;
+
+	Texture* texture = new Texture();
+	texture->LoadBmp(_hWnd, FullPath.c_str());
+	texture->SetTransParent(Transparent);
+	_Textures[Hash] = texture;
+
+	return texture;
+}
+
+Sprite* ResourceManager::CreateSprite(const std::wstring& Hash, Texture* texture, int x, int y, int cx, int cy) {
+	if (_Sprites.find(Hash) != _Sprites.end()) {
+		return _Sprites[Hash];
+	}
+
+	if (cx == 0) {
+		cx = texture->GetSize().x;
+	}
+
+	if (cy == 0) {
+		cy = texture->GetSize().y;
+	}
+
+	Sprite* sprite = new Sprite(texture, x, y, cx, cy);
+	_Sprites[Hash] = sprite;
+
+	return sprite;
 }

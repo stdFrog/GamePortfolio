@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "EditScene.h"
-#include "LineMesh.h"
+#include <fstream>
 
 EditScene::EditScene() {
 
@@ -35,12 +35,12 @@ void EditScene::Update(float dtSeconds) {
 				_bOrigin = FALSE;
 			}
 			else {
-				if (Line.GetLines().empty()) {
-					Line.GetLines().push_back(std::make_pair(_LastPosition, MousePosition));
+				if (_Lines.empty()) {
+					_Lines.push_back(std::make_pair(_LastPosition, MousePosition));
 				}
 				else {
 					if (_LastPosition.x != MousePosition.x && _LastPosition.y != MousePosition.y) {
-						Line.GetLines().push_back(std::make_pair(_LastPosition, MousePosition));
+						_Lines.push_back(std::make_pair(_LastPosition, MousePosition));
 					}
 				}
 				_LastPosition = MousePosition;
@@ -53,28 +53,54 @@ void EditScene::Update(float dtSeconds) {
 	}
 
 	if (Input.IsPressed(InputButton::S)) {
-		Line.Save(L"LineUnit.txt");
+		std::wofstream File;
+		File.open(L"LineUnit.txt");
+
+		File << static_cast<int>(_Lines.size()) << std::endl;
+
+		for (auto& Line : _Lines) {
+			POINT From = Line.first;
+			POINT To = Line.second;
+
+			std::wstring String = std::format(L"({0},{1})->({2},{3})", From.x, From.y, To.x, To.y);
+			File << String << std::endl;
+		}
+
+		File.close();
 	}
 
 	if (Input.IsPressed(InputButton::W)) {
-		Line = Engine->GetLineMesh(L"Player");
+		std::wifstream File;
+		File.open(L"LineUnit.txt");
+
+		int Count;
+		File >> Count;
+
+		_Lines.clear();
+		for (int i = 0; i < Count; i++) {
+			POINT pt1, pt2;
+
+			std::wstring String;
+			File >> String;
+			swscanf_s(String.c_str(), L"(%d,%d)->(%d,%d)", &pt1.x, &pt1.y, &pt2.x, &pt2.y);
+
+			_Lines.push_back(std::make_pair(pt1, pt2));
+		}
+
 		_bOrigin = TRUE;
+		File.close();
 	}
 
 	if (Input.IsPressed(InputButton::SpaceBar)) {
-		Line.GetLines().clear();
+		_Lines.clear();
 		InvalidateRect(GetActiveWindow(), NULL, TRUE);
 	}
 }
 
 void EditScene::Render(HDC hDC) {
-	for (auto it = Line.GetLines().begin(); it != Line.GetLines().end(); it++) {
-		auto& temp = *it;
-		POINT p1 = temp.first, pt2 = temp.second;
-
-		Vector From(temp.first.x, temp.first.y);
-		Vector To(temp.second.x, temp.second.y);
-
+	for (auto& Line : _Lines) {
+		Vector From(Line.first.x, Line.first.y);
+		Vector To(Line.second.x, Line.second.y);
 		WindowsUtility::DrawLine(hDC, From, To);
 	}
 

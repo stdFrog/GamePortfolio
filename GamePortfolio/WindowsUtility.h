@@ -5,6 +5,14 @@
 
 namespace WindowsUtility
 {
+	static void GetWindowSize(HWND hWnd, PLONG Width, PLONG Height) {
+		RECT crt;
+
+		GetClientRect(hWnd, &crt);
+		*Width = crt.right - crt.left;
+		*Height = crt.bottom - crt.top;
+	}
+
 	static void SetWindowTitle(HWND hWnd, float FPS) {
 		TCHAR str[128];
 		_stprintf_s(str, TEXT("[%.4f fps]"), FPS);
@@ -293,6 +301,72 @@ namespace WindowsUtility
 
 		CloseHandle(hFile);
 		return TRUE;
+	}
+
+	static void* LoadBmp(BITMAPINFOHEADER* ih)	{
+		void* buf = NULL;
+		TCHAR lpstrFile[MAX_PATH] = TEXT("");
+		TCHAR FileName[MAX_PATH];
+		TCHAR InitDir[MAX_PATH];
+		TCHAR* path[MAX_PATH];
+		TCHAR* pt = NULL;
+		OPENFILENAME ofn;
+
+		memset(&ofn, 0, sizeof(OPENFILENAME));
+		ofn.lStructSize = sizeof(OPENFILENAME);
+		ofn.lpstrFile = lpstrFile;
+		ofn.lpstrFilter = TEXT("모든 파일(*.*)\0*.*\0비트맵 파일(*.bmp)\0*.bmp\0\0");
+		ofn.lpstrTitle = TEXT("비트맵 파일을 선택하세요");
+		ofn.lpstrDefExt = TEXT("txt");
+		ofn.nMaxFile = MAX_PATH;
+		ofn.nMaxFileTitle = MAX_PATH;
+		ofn.hwndOwner = NULL;
+
+		GetWindowsDirectory(InitDir, MAX_PATH);
+		ofn.lpstrInitialDir = InitDir;
+
+		if (GetOpenFileName(&ofn) != 0)
+		{
+			if (wcscmp(lpstrFile + ofn.nFileExtension, TEXT("bmp")) == 0)
+			{
+				HANDLE hFile = CreateFile(lpstrFile, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+				if (hFile != INVALID_HANDLE_VALUE)
+				{
+					DWORD dwRead;
+					SetFilePointer(hFile, sizeof(BITMAPFILEHEADER), NULL, FILE_BEGIN);
+					if (ReadFile(hFile, ih, sizeof(BITMAPINFOHEADER), &dwRead, NULL))
+					{
+						if (ih->biSizeImage == 0)
+						{
+							ih->biSizeImage = (((ih->biBitCount * ih->biWidth + 31) & ~31) >> 3) * ih->biHeight;
+						}
+
+						buf = malloc(ih->biSizeImage);
+						if (ReadFile(hFile, buf, ih->biSizeImage, &dwRead, NULL))
+						{
+							CloseHandle(hFile);
+							return buf;
+						}
+						else {
+							Trace(TEXT("Failed to read bmp file data"));
+						}
+					}
+					else {
+						Trace(TEXT("Failed to ReadFile"));
+					}
+					CloseHandle(hFile);
+				}
+				else {
+					Trace(TEXT("cannot open this file"));
+				}
+			}
+			else {
+				Trace(TEXT("those not bmp file"));
+			}
+		}
+
+		return NULL;
 	}
 }
 

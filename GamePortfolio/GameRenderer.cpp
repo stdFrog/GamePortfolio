@@ -20,6 +20,7 @@ void GameRenderer::OnMapping() {
 }
 
 void GameRenderer::OnResize(WPARAM wParam, LPARAM lParam) {
+	_MainEngine.SetOnResizeState(TRUE);
 	ReleaseGDI();
 }
 

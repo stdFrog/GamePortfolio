@@ -108,6 +108,18 @@ LRESULT MainWindow::OnSize(WPARAM wParam, LPARAM lParam) {
     return 0;
 }
 
+/*
+LRESULT MainWindow::OnExitResizeMove(WPARAM wParam, LPARAM lParam) {
+    if (wParam != SIZE_MINIMIZED) {
+        if (_Class && ResizeNotify) {
+            ((GameRenderer*)_Class->*ResizeNotify)(wParam, lParam);
+        }
+    }
+
+    return 0;
+}
+*/
+
 LRESULT MainWindow::OnPaint(WPARAM wParam, LPARAM lParam) {
     PAINTSTRUCT ps;
     BeginPaint(_hWnd, &ps);

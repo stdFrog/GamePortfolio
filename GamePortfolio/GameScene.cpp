@@ -9,16 +9,7 @@ GameScene::~GameScene() {
 }
 
 BOOL GameScene::Initialize() {
-	Player* P = CreateObject<Player>();
-	P->SetPosition(Vector(400, 400));
-	AppendObject(P);
-
-	for (int i = 0; i < 5; i++){
-		Monster* M = CreateObject<Monster>();
-		M->SetPosition(Vector((float)(i+1) * 100.f, 100.f));
-		AppendObject(M);
-	}	
-
+	
 	return TRUE;
 }
 

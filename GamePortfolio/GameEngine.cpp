@@ -1,35 +1,95 @@
 #include "pch.h"
+#include "ResourceManager.h"
+#include "Texture.h"
+#include "Sprite.h"
 
 GameEngine::GameEngine(){
 
 }
 
 GameEngine::~GameEngine() {
-    
+    for (auto& Item : _Textures) {
+        delete Item.second;
+        Item.second = NULL;
+    }
+
+    _Textures.clear();
+}
+
+/*
+Texture& GameEngine::CreateTexture(const std::wstring& Hash, const std::wstring& Path) {
+    auto Temp = std::make_unique<Texture>()->LoadBmp(_hMainWnd, Path);
+    _Textures.insert({ Hash, std::move(Temp) });
+    return *_Textures.at(Hash).get();
+}
+*/
+
+Texture* GameEngine::LoadTexture(const std::wstring& Hash, const std::wstring& Path, int Transparent) {
+    // 이미지 불러오고 해쉬로 저장
+    if (_Textures.find(Hash) != _Textures.end()) {
+        return _Textures[Hash];
+    }
+
+    std::filesystem::path FullPath = _ResourcePath / Path;
+
+    Texture* texture = new Texture();
+    texture->LoadBmp(_hMainWnd, FullPath.c_str());
+    texture->SetTransParent(Transparent);
+    _Textures[Hash] = texture;
+
+    return texture;
+}
+
+Sprite* GameEngine::CreateSprite(const std::wstring& Hash, Texture* texture, int x, int y, int cx, int cy) {
+    if (_Sprites.find(Hash) != _Sprites.end()) {
+        return _Sprites[Hash];
+    }
+
+    if (cx == 0) {
+        cx = texture->GetSize().x;
+    }
+
+    if (cy == 0) {
+        cy = texture->GetSize().y;
+    }
+
+    Sprite* sprite = new Sprite(texture, x, y, cx, cy);
+    _Sprites[Hash] = sprite;
+
+    return sprite;
 }
 
 BOOL GameEngine::LoadResources() {
     // TODO : Mesh, Texture, Sprite Load
-    CreateLineMesh(L"Player", L"LineUnit.txt");
+    // ResourceManager::GetInstance()->Init(hWnd, Path);
+
+    TCHAR Temp[MAX_PATH];
+    GetCurrentDirectory(MAX_PATH, Temp);
+    lstrcat(Temp, TEXT("\\..\\Resources\\"));
+    _ResourcePath = std::filesystem::path(Temp);
 
     return TRUE;
 }
 
-BOOL GameEngine::Initialize(HWND hWnd) {
-    if (!_bSceneReady) {
-        _bSceneReady = ChangeScene(SceneType::GameScene);
+BOOL GameEngine::Initialize(HWND hWnd /*, std::filepath::path ResourcePath*/) {
+    if (_hMainWnd == NULL) {
+        _hMainWnd = hWnd;
     }
 
-    if (!_bInputInitialized) {
-        _bInputInitialized = _InputManager.Initialize(hWnd);
-    }
-    
     if (!_bResourceReady) {
         _bResourceReady = LoadResources();
     }
+    
+    if (!_bInputInitialized) {
+        _bInputInitialized = _InputManager.Initialize(hWnd);
+    }
+
+    if (!_bSceneReady) {
+        _bSceneReady = ChangeScene(SceneType::DevScene);
+    }
 
     _bAllInitialized = (_bSceneReady && _bInputInitialized && _bResourceReady);
-	return ((_bAllInitialized) ? (_hMainWnd = hWnd, TRUE) : FALSE);
+    return _bAllInitialized;
 }
 
 void GameEngine::Update(float dtSeconds) {
@@ -69,10 +129,4 @@ BOOL GameEngine::ChangeScene(SceneType NewSceneType) {
     // _MainScene->SetInputInstance(this, &GameEngine::_InputManager);
 
     return _MainScene->Initialize();
-}
-
-void GameEngine::CreateLineMesh(std::wstring Name, std::wstring Path) {
-    LineMesh* Append = new LineMesh;
-    Append->Load(Path);
-    _LineMeshes[Name].reset(Append);
 }

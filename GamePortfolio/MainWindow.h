@@ -16,6 +16,7 @@ class MainWindow : public BaseWindow<MainWindow>
         {WM_PAINT, &MainWindow::OnPaint},
         {WM_DISPLAYCHANGE, &MainWindow::OnPaint},
         {WM_SIZE, &MainWindow::OnSize},
+        // {WM_EXITSIZEMOVE, &MainWindow::OnExitResizeMove},
         {WM_CREATE, &MainWindow::OnCreate},
         {WM_DESTROY, &MainWindow::OnDestroy},
     };
@@ -33,6 +34,7 @@ private:
     LRESULT OnSize(WPARAM wParam, LPARAM lParam);
     LRESULT OnCreate(WPARAM wParam, LPARAM lParam);
     LRESULT OnDestroy(WPARAM wParam, LPARAM lParam);
+    // LRESULT OnExitResizeMove(WPARAM wParam, LPARAM lParam);
     
 private:
     void* _Class;

@@ -1,5 +1,7 @@
 #pragma once
-// {Scene | 0 < Scene <= x := MainScene(1)}
+
+class Texture;
+class Sprite;
 
 class GameEngine
 {
@@ -10,7 +12,13 @@ class GameEngine
     BOOL _bResourceReady = FALSE;
     BOOL _bInputInitialized = FALSE;
     BOOL _bAllInitialized = FALSE;
-private:
+    BOOL _bOnResizeNotify = FALSE;
+
+public:
+    void SetOnResizeState(BOOL bTrue) { _bOnResizeNotify = bTrue; }
+    BOOL GetOnResizeState() { return _bOnResizeNotify; }
+
+ private:
     /*
         장면이 하나라면 등장 요소만으로 구성해도 상관없다.
 
@@ -24,12 +32,37 @@ private:
     SceneType _CurrentScene = SceneType::None;
     BOOL ChangeScene(SceneType NewSceneType);
 
-    /*
 public:
-    SceneType GetCurrentSceneType() { return _CurrentScene; }
     std::unique_ptr<BaseScene>& GetCurrentScene() { return _MainScene; }
-    const std::unique_ptr<BaseScene>&  GetCurrentScene() const { return _MainScene;}
-    */
+    const std::unique_ptr<BaseScene>& GetCurrentScene() const { return _MainScene; }
+
+private:
+    std::filesystem::path _ResourcePath;
+
+public:
+    const std::filesystem::path& GetResourcePath() { return _ResourcePath; }
+    const std::filesystem::path& GetRelativePath() { return _ResourcePath.relative_path(); }
+    const std::filesystem::path& GetCurrentFolder() { return std::filesystem::current_path(); }
+    const std::filesystem::path& GetAbsolutePath() { return std::filesystem::absolute(_ResourcePath); }
+
+private:
+    std::unordered_map < std::wstring, Texture*> _Textures;
+
+public:
+    // 확장용
+    // Texture& CreateTexture(const std::wstring& Hash, const std::wstring& Path);
+    // const Texture& CreateTexture(const std::wstring& Hash, const std::wstring& Path) const;
+    // const Texture& GetTexture(const std::wstring& Hash) const { return *_Textures.at(Hash).get(); }
+
+    Texture* GetTexture(const std::wstring& Hash) { return _Textures[Hash]; }
+    Texture* LoadTexture(const std::wstring& Hash, const std::wstring& Path, int Transparent = RGB(255, 0, 255));
+
+private:
+    std::unordered_map<std::wstring, Sprite*> _Sprites;
+
+public:
+    Sprite* GetSprite(const std::wstring& Hash) { return _Sprites[Hash]; }
+    Sprite* CreateSprite(const std::wstring& Hash, Texture* texture, int x = 0, int y = 0, int cx = 0, int cy = 0);
 
 private:
     InputManager _InputManager;
@@ -41,12 +74,12 @@ public:
 
 private:
     // 간단한 메시
-    std::unordered_map<std::wstring, std::unique_ptr<LineMesh>> _LineMeshes;
+    // std::unordered_map<std::wstring, std::unique_ptr<LineMesh>> _LineMeshes;
     
 public:
-    void CreateLineMesh(std::wstring Name, std::wstring Path);
+    /*void CreateLineMesh(std::wstring Name, std::wstring Path);
     LineMesh& GetLineMesh(std::wstring Name) { return *_LineMeshes.at(Name).get(); }
-    const LineMesh& GetLineMesh(std::wstring Name) const { return *_LineMeshes.at(Name).get(); }
+    const LineMesh& GetLineMesh(std::wstring Name) const { return *_LineMeshes.at(Name).get(); }*/
 
     // TODO :
     // Mesh, Camera, Texture, Input, GameObject, Load Resources

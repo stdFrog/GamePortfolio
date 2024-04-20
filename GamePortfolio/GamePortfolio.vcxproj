@@ -134,12 +134,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Actor.h" />
+    <ClInclude Include="Component.h" />
     <ClInclude Include="DevScene.h" />
     <ClInclude Include="EditScene.h" />
     <ClInclude Include="EngineHeaders.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GameMath.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="GamePortfolio.h" />
     <ClInclude Include="GameRenderer.h" />
     <ClInclude Include="GameScene.h" />
@@ -152,12 +155,16 @@
     <ClInclude Include="ObjectHeaders.h" />
     <ClInclude Include="ObjectInterface.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerMoveScript.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="BaseScene.h" />
     <ClInclude Include="ResourceBase.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="SceneHeaders.h" />
     <ClInclude Include="Sprite.h" />
+    <ClInclude Include="SpriteActor.h" />
+    <ClInclude Include="SpriteRenderer.h" />
     <ClInclude Include="StandardLibrary.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Texture.h" />
@@ -165,10 +172,13 @@
     <ClInclude Include="WindowsUtility.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="Component.cpp" />
     <ClCompile Include="DevScene.cpp" />
     <ClCompile Include="EditScene.cpp" />
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="GameMath.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GamePortfolio.cpp" />
     <ClCompile Include="GameRenderer.cpp" />
     <ClCompile Include="GameScene.cpp" />
@@ -183,9 +193,13 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="BaseScene.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayerMoveScript.cpp" />
     <ClCompile Include="ResourceBase.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="SpriteActor.cpp" />
+    <ClCompile Include="SpriteRenderer.cpp" />
     <ClCompile Include="StandardLibrary.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Vector.cpp" />

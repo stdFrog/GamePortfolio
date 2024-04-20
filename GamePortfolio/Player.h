@@ -1,9 +1,13 @@
 #pragma once
+#include "SpriteActor.h"
 
-class Player : public ObjectInterface
+// 여기부터 컨텐츠 코드
+class Player : public SpriteActor
 {
+	using Super = SpriteActor;
+
 public:
-	Player(ObjectType Type = ObjectType::Player);
+	Player();
 	virtual ~Player();
 
 	virtual BOOL Initialize();

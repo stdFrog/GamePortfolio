@@ -51,6 +51,18 @@
     <Filter Include="소스 파일\TempForlder">
       <UniqueIdentifier>{b2a25710-77c6-4ee8-8596-ab7136a9e995}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\04.GameEngine\04-1.Resources">
+      <UniqueIdentifier>{27a390af-051c-49bf-a800-787b48885b9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\07.Object\GameObject\Unreal">
+      <UniqueIdentifier>{7ab54610-c055-492c-851a-d0e7178cb488}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\07.Object\GameObject\Unity">
+      <UniqueIdentifier>{3e3cbbe4-afa9-4ea9-a582-6c247e74eba7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\07.Object\GameObject\Unity\Components">
+      <UniqueIdentifier>{113c4f69-76d4-40fb-8d2f-302a9f4e7a8d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -116,32 +128,50 @@
     <ClInclude Include="Monster.h">
       <Filter>소스 파일\07.Object\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>소스 파일\07.Object\GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="ObjectHeaders.h">
       <Filter>소스 파일\07.Object</Filter>
     </ClInclude>
     <ClInclude Include="EditScene.h">
       <Filter>소스 파일\06.Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="Fortress.h">
-      <Filter>소스 파일\TempForlder</Filter>
-    </ClInclude>
-    <ClInclude Include="ResourceBase.h">
-      <Filter>소스 파일\TempForlder</Filter>
-    </ClInclude>
-    <ClInclude Include="ResourceManager.h">
-      <Filter>소스 파일\TempForlder</Filter>
-    </ClInclude>
-    <ClInclude Include="LineMesh.h">
-      <Filter>소스 파일\04.GameEngine</Filter>
-    </ClInclude>
     <ClInclude Include="EngineHeaders.h">
       <Filter>소스 파일\04.GameEngine</Filter>
     </ClInclude>
     <ClInclude Include="Matrix.h">
       <Filter>소스 파일\03.GameMath</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite.h">
+      <Filter>소스 파일\04.GameEngine\04-1.Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>소스 파일\04.GameEngine\04-1.Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceBase.h">
+      <Filter>소스 파일\04.GameEngine\04-1.Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>소스 파일\04.GameEngine\04-1.Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>소스 파일\07.Object\GameObject\Unreal</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>소스 파일\07.Object\GameObject\Unity</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteActor.h">
+      <Filter>소스 파일\07.Object\GameObject\Unreal</Filter>
+    </ClInclude>
+    <ClInclude Include="Actor.h">
+      <Filter>소스 파일\07.Object\GameObject\Unreal</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>소스 파일\07.Object\GameObject\Unity\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteRenderer.h">
+      <Filter>소스 파일\07.Object\GameObject\Unity\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerMoveScript.h">
+      <Filter>소스 파일\07.Object\GameObject\Unity\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -196,26 +226,44 @@
     <ClCompile Include="Monster.cpp">
       <Filter>소스 파일\07.Object\GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>소스 파일\07.Object\GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="EditScene.cpp">
       <Filter>소스 파일\06.Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="Fortress.cpp">
-      <Filter>소스 파일\TempForlder</Filter>
-    </ClCompile>
-    <ClCompile Include="ResourceBase.cpp">
-      <Filter>소스 파일\TempForlder</Filter>
-    </ClCompile>
-    <ClCompile Include="ResourceManager.cpp">
-      <Filter>소스 파일\TempForlder</Filter>
-    </ClCompile>
-    <ClCompile Include="LineMesh.cpp">
-      <Filter>소스 파일\04.GameEngine</Filter>
-    </ClCompile>
     <ClCompile Include="Matrix.cpp">
       <Filter>소스 파일\03.GameMath</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>소스 파일\04.GameEngine\04-1.Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>소스 파일\04.GameEngine\04-1.Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceBase.cpp">
+      <Filter>소스 파일\04.GameEngine\04-1.Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>소스 파일\04.GameEngine\04-1.Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>소스 파일\07.Object\GameObject\Unreal</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>소스 파일\07.Object\GameObject\Unity</Filter>
+    </ClCompile>
+    <ClCompile Include="Actor.cpp">
+      <Filter>소스 파일\07.Object\GameObject\Unreal</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteActor.cpp">
+      <Filter>소스 파일\07.Object\GameObject\Unreal</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>소스 파일\07.Object\GameObject\Unity\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteRenderer.cpp">
+      <Filter>소스 파일\07.Object\GameObject\Unity\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerMoveScript.cpp">
+      <Filter>소스 파일\07.Object\GameObject\Unity\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

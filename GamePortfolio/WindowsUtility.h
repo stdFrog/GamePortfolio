@@ -5,6 +5,8 @@
 
 namespace WindowsUtility
 {
+	static POINT WindowsSize = {1280, 960};
+
 	static void GetWindowSize(HWND hWnd, PLONG Width, PLONG Height) {
 		RECT crt;
 

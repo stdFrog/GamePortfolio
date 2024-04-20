@@ -18,7 +18,7 @@ class BaseScene
 protected:
 	void* _EngineInstance;
 	InputManager GameEngine::* _InputInstance;
-	std::vector<ObjectInterface*> _Objects;
+	std::vector<ObjectInterface*> _Objects;				// 각 씬에 개별 배치할 것인가?
 
 public:
 	BaseScene();

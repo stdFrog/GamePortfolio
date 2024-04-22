@@ -12,3 +12,5 @@
 #include <functional>
 #include <filesystem>
 #include <unordered_map>
+
+#pragma comment(lib, "MsImg32")

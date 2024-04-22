@@ -310,8 +310,8 @@ namespace WindowsUtility
 		TCHAR lpstrFile[MAX_PATH] = TEXT("");
 		TCHAR FileName[MAX_PATH];
 		TCHAR InitDir[MAX_PATH];
-		TCHAR* path[MAX_PATH];
-		TCHAR* pt = NULL;
+		// TCHAR* path[MAX_PATH];
+		// TCHAR* pt = NULL;
 		OPENFILENAME ofn;
 
 		memset(&ofn, 0, sizeof(OPENFILENAME));

@@ -1,10 +1,15 @@
 #pragma once
-#include "SpriteActor.h"
+#include "FlipbookActor.h"
 
 // 여기부터 컨텐츠 코드
-class Player : public SpriteActor
+class Player : public FlipbookActor
 {
-	using Super = SpriteActor;
+	using Super = FlipbookActor;
+
+	Flipbook* _FlipbookUp = NULL;
+	Flipbook* _FlipbookDown = NULL;
+	Flipbook* _FlipbookLeft = NULL;
+	Flipbook* _FlipbookRight = NULL;
 
 public:
 	Player();

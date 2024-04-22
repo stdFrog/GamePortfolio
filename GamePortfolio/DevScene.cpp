@@ -1,11 +1,6 @@
 #include "pch.h"
 #include "Texture.h"
 #include "Sprite.h"
-#include "Actor.h"
-#include "SpriteActor.h"
-#include "Player.h"
-#include "GameObject.h"
-#include "SpriteRenderer.h"
 
 DevScene::DevScene() {
 	_hWnd = GetForegroundWindow();
@@ -13,7 +8,36 @@ DevScene::DevScene() {
 }
 
 DevScene::~DevScene() {
+	CleanUp();
+}
 
+void DevScene::CleanUp() {
+	std::for_each(_Actors.begin(), _Actors.end(), [=](Actor* Remove) {delete Remove; });
+	_Actors.clear();
+}
+
+BOOL DevScene::AppendActor(Actor* NewObject) {
+	if (NewObject == NULL) { return FALSE; }
+
+	auto it = std::find(_Actors.begin(), _Actors.end(), NewObject);
+	if (it != _Actors.end()) {
+		return FALSE;
+	}
+
+	_Actors.push_back(NewObject);
+
+	return TRUE;
+}
+
+BOOL DevScene::RemoveActor(Actor* Target) {
+	if (Target == NULL) { return FALSE; }
+
+	auto it = std::remove(_Actors.begin(), _Actors.end(), Target);
+	_Actors.erase(it, _Actors.end());
+
+	delete Target;
+
+	return TRUE;
 }
 
 BOOL DevScene::Initialize() {
@@ -33,33 +57,51 @@ BOOL DevScene::Initialize() {
 	Engine->LoadTexture(L"Exit", L"Sprite\\UI\\Exit.bmp");
 
 	Engine->CreateSprite(L"Stage01", Engine->GetTexture(L"Stage01"));
-	Engine->CreateSprite(L"Start_On", Engine->GetTexture(L"Start"), 0, 0, 150, 150);
-	Engine->CreateSprite(L"Start_Off", Engine->GetTexture(L"Start"), 150, 0, 150, 150);
+	Engine->CreateSprite(L"Start_Off", Engine->GetTexture(L"Start"), 0, 0, 150, 150);
+	Engine->CreateSprite(L"Start_On", Engine->GetTexture(L"Start"), 150, 0, 150, 150);
 	Engine->CreateSprite(L"Edit_Off", Engine->GetTexture(L"Edit"), 0, 0, 150, 150);
 	Engine->CreateSprite(L"Edit_On", Engine->GetTexture(L"Edit"), 150, 0, 150, 150);
 	Engine->CreateSprite(L"Exit_Off", Engine->GetTexture(L"Exit"), 0, 0, 150, 150);
 	Engine->CreateSprite(L"Exit_On", Engine->GetTexture(L"Exit"), 150, 0, 150, 150);
 
 	{
+		Texture* T = Engine->GetTexture(L"PlayerUp");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_MoveUp");
+		F->SetInfo({ T, L"FB_MoveUp", Vector(200, 200), 0, 9, 1, 0.5f});
+	}
+
+	{
+		Texture* T = Engine->GetTexture(L"PlayerDown");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_MoveDown");
+		F->SetInfo({ T, L"FB_MoveDown", Vector(200, 200), 0, 9, 1, 0.5f });
+	}
+
+	{
+		Texture* T = Engine->GetTexture(L"PlayerLeft");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_MoveLeft");
+		F->SetInfo({ T, L"FB_MoveLeft", Vector(200, 200), 0, 9, 1, 0.5f });
+	}
+
+	{
+		Texture* T = Engine->GetTexture(L"PlayerRight");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_MoveRight");
+		F->SetInfo({ T, L"FB_MoveRight", Vector(200, 200), 0, 9, 1, 0.5f });
+	}
+
+	{
 		Sprite* Temp = Engine->GetSprite(L"Stage01");
 		
-		SpriteActor* background = new SpriteActor();
+		SpriteActor* background = CreateActor<SpriteActor>();
 		background->SetSprite(Temp);
 		const Vector Size = Temp->GetSize();
 		background->SetPosition(Vector(Size.x / 2, Size.y / 2));
 		
-		_Actors.push_back(background);
+		AppendActor(background);
 	}
 	
 	{
-		Sprite* Temp2 = Engine->GetSprite(L"Start_On");
-
-		Player* player = new Player();
-		player->SetSprite(Temp2);
-		const Vector Size = Temp2->GetSize();
-		player->SetPosition(Vector(Size.x / 2, Size.y / 2));
-
-		_Actors.push_back(player);
+		Player* player = CreateActor<Player>();
+		AppendActor(player);
 	}
 
 	for (Actor* actor : _Actors) {
@@ -94,10 +136,33 @@ BOOL DevScene::Initialize() {
 		네임 스페이스와 범위 연산자를 이용해 기반 클래스의 로직을 먼저 호출하고 있는데,
 		이러한 설계 방식을 택한 이유가 무엇일까 고민해볼 필요가 있다.
 
-		당장은 크게 두 가지 이유만 떠오르는데, 하나는 불필요한 정보의 노출을 최소화 한다는 점,
-		또 하나는 로딩 속도를 높일 수 있다는 점 이 두 가지가 아닐까 싶다.
+		이는 전체 구조를 보면 쉽게 이해되는데, 일단 등장 요소를 어떻게 관리하는지 살펴보자.
 
-		자세한건 상용 엔진을 공부하게 되면 알아봐야겠다.
+		현재 구조에선 객체를 표현하기 위해 하나의 큰 파일(비트맵)을 읽고
+		사용할 영역을 직접 잘라내어(Sprite) 필요한 시기에 해당 이미지를 호출하여 객체를 표현한다.
+
+		이때 사용되는 Sprite 클래스는 배경, 사물 등의 정적인 요소에서 활용된다.
+
+		그런데, 게임은 정적인 요소만 있는 것이 아니다.
+		동적인 요소, 예를 들어 캐릭터나 투사체, 몬스터 등을 표현하려면 어떻게 해야할까?
+
+		말 그대로 애니메이션이 필요하기 때문에 이를 관리할 클래스가 추가되어야 한다.
+
+		곧, Flipbook 클래스가 이 기능을 맡아 처리하는데 언리얼에서 애니메이션을 지칭할 때
+		Flipbook 이라는 용어를 사용한다.
+
+		이 클래스를 잘 살펴보면 왜 Super::Initialize 따위의 구문이 필요한지 알 수 있다.
+
+		씬에 등장하는 요소는 각각이 유일한 객체로써 존재하지만, 리소스는 그렇지 않다.
+		즉, 하나의 리소스에 여러 객체의 이미지가 담겨 있을 수 있다.
+		
+		이러한 리소스는 대개 일정한 크기로, 행과 열이 나누어져 있다.
+		이는 곧, 동일한 크기의 이미지가 반복된다는 뜻이며 기반 클래스에서
+		이에 필요한 처리를 끝내면 파생 클래스는 추가적인 동작을 할 필요가 없다는 뜻이다.
+		
+		기반 클래스에서 파생 클래스에 필요한 이미지의 초기화, 업데이트, 렌더링 과정을
+		한꺼번에 관리할 수 있는 상태란 뜻이므로, 파생 클래스에선 기반 클래스의
+		전체 로직을 한 번씩만 호출하면 된다.
 
 		{
 			Sprite* Temp = Engine->GetSprite(L"Stage01");
@@ -169,8 +234,6 @@ BOOL DevScene::Initialize() {
 
 		_GameObject->Initialize();
 	*/
-
-
 
 	return TRUE;
 }

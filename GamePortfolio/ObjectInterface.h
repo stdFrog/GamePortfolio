@@ -33,6 +33,7 @@ public:
 	Vector GetPosition() { return _Position; }
 	void SetPosition(Vector Position) { _Position = Position; }
 	void SetScene(BaseScene* Scene) { _Scene = Scene; }
+	void SetType(ObjectType Type) { _Type = Type; }
 	void SetInitializeState(BOOL bState) { _bInitialized = bState; }
 
 public:

@@ -13,9 +13,10 @@ protected:
 
 public:
 	void SetSprite(Sprite* sprite) { _Sprite = sprite; }
+	Sprite* GetSprite() { return _Sprite; }
 
 public:
-	SpriteActor();
+	SpriteActor(ObjectType Type = ObjectType::None);
 	virtual ~SpriteActor();
 
 	virtual BOOL Initialize();

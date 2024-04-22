@@ -42,11 +42,11 @@ Sprite* ResourceManager::CreateSprite(const std::wstring& Hash, Texture* texture
 	}
 
 	if (cx == 0) {
-		cx = texture->GetSize().x;
+		cx = static_cast<int>(texture->GetSize().x);
 	}
 
 	if (cy == 0) {
-		cy = texture->GetSize().y;
+		cy = static_cast<int>(texture->GetSize().y);
 	}
 
 	Sprite* sprite = new Sprite(texture, x, y, cx, cy);

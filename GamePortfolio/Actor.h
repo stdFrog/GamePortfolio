@@ -15,7 +15,7 @@
 class Actor : public ObjectInterface
 {
 public:
-	Actor();
+	Actor(ObjectType Type = ObjectType::None);
 	virtual ~Actor();
 
 	virtual BOOL Initialize();				// BeginPlay

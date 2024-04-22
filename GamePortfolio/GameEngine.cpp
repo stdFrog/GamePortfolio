@@ -1,19 +1,30 @@
 #include "pch.h"
-#include "ResourceManager.h"
-#include "Texture.h"
-#include "Sprite.h"
 
 GameEngine::GameEngine(){
 
 }
 
 GameEngine::~GameEngine() {
-    for (auto& Item : _Textures) {
-        delete Item.second;
-        Item.second = NULL;
+    for (auto& T : _Textures) {
+        delete T.second;
+        T.second = NULL;
     }
 
     _Textures.clear();
+
+    for (auto& S : _Sprites) {
+        delete S.second;
+        S.second = NULL;
+    }
+
+    _Sprites.clear();
+
+    for (auto& F : _Flipbooks) {
+        delete F.second;
+        F.second = NULL;
+    }
+
+    _Flipbooks.clear();
 }
 
 /*
@@ -32,12 +43,12 @@ Texture* GameEngine::LoadTexture(const std::wstring& Hash, const std::wstring& P
 
     std::filesystem::path FullPath = _ResourcePath / Path;
 
-    Texture* texture = new Texture();
-    texture->LoadBmp(_hMainWnd, FullPath.c_str());
-    texture->SetTransParent(Transparent);
-    _Textures[Hash] = texture;
+    Texture* NewTexture = new Texture();
+    NewTexture->LoadBmp(_hMainWnd, FullPath.c_str());
+    NewTexture->SetTransParent(Transparent);
+    _Textures[Hash] = NewTexture;
 
-    return texture;
+    return NewTexture;
 }
 
 Sprite* GameEngine::CreateSprite(const std::wstring& Hash, Texture* texture, int x, int y, int cx, int cy) {
@@ -46,17 +57,27 @@ Sprite* GameEngine::CreateSprite(const std::wstring& Hash, Texture* texture, int
     }
 
     if (cx == 0) {
-        cx = texture->GetSize().x;
+        cx = static_cast<int>(texture->GetSize().x);
     }
 
     if (cy == 0) {
-        cy = texture->GetSize().y;
+        cy = static_cast<int>(texture->GetSize().y);
     }
 
-    Sprite* sprite = new Sprite(texture, x, y, cx, cy);
-    _Sprites[Hash] = sprite;
+    Sprite* NewSprite = new Sprite(texture, x, y, cx, cy);
+    _Sprites[Hash] = NewSprite;
 
-    return sprite;
+    return NewSprite;
+}
+
+Flipbook* GameEngine::CreateFlipbook(const std::wstring& Hash) {
+    if (_Flipbooks.find(Hash) != _Flipbooks.end()) {
+        return _Flipbooks[Hash];
+    }
+
+    Flipbook* NewFlipbook = new Flipbook();
+    _Flipbooks[Hash] = NewFlipbook;
+    return NewFlipbook;
 }
 
 BOOL GameEngine::LoadResources() {

@@ -99,8 +99,8 @@ void EditScene::Update(float dtSeconds) {
 
 void EditScene::Render(HDC hDC) {
 	for (auto& Line : _Lines) {
-		Vector From(Line.first.x, Line.first.y);
-		Vector To(Line.second.x, Line.second.y);
+		Vector From(static_cast<float>(Line.first.x), static_cast<float>(Line.first.y));
+		Vector To(static_cast<float>(Line.second.x), static_cast<float>(Line.second.y));
 		WindowsUtility::DrawLine(hDC, From, To);
 	}
 

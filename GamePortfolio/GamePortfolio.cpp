@@ -32,7 +32,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE, LPWSTR, int nCmdShow) {
             if (CurrentTime - PreviousTime > UpdatePeriod){
                 float FramePerSeconds = GRender.GetFrameFPS();
                 WindowsUtility::SetWindowTitle(win.Window(), FramePerSeconds);
-                PreviousTime = CurrentTime;
+                PreviousTime = static_cast<INT64>(CurrentTime);
             }
 
         }

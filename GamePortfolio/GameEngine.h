@@ -2,6 +2,7 @@
 
 class Texture;
 class Sprite;
+class Flipbook;
 
 class GameEngine
 {
@@ -46,7 +47,7 @@ public:
     const std::filesystem::path& GetAbsolutePath() { return std::filesystem::absolute(_ResourcePath); }
 
 private:
-    std::unordered_map < std::wstring, Texture*> _Textures;
+    std::unordered_map<std::wstring, Texture*> _Textures;
 
 public:
     // 확장용
@@ -58,11 +59,19 @@ public:
     Texture* LoadTexture(const std::wstring& Hash, const std::wstring& Path, int Transparent = RGB(255, 0, 255));
 
 private:
+    std::unordered_map<std::wstring, Flipbook*> _Flipbooks;
+
+public:
+    Flipbook* GetFlipbook(const std::wstring& Hash) { return _Flipbooks[Hash]; }
+    Flipbook* CreateFlipbook(const std::wstring& Hash);
+
+private:
     std::unordered_map<std::wstring, Sprite*> _Sprites;
 
 public:
     Sprite* GetSprite(const std::wstring& Hash) { return _Sprites[Hash]; }
     Sprite* CreateSprite(const std::wstring& Hash, Texture* texture, int x = 0, int y = 0, int cx = 0, int cy = 0);
+
 
 private:
     InputManager _InputManager;

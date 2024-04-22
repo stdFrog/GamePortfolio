@@ -32,11 +32,23 @@ public:
 		// type trait
 		static_assert(std::is_convertible_v<T*, ObjectInterface*>);
 
-		T* Object = new T();
-		Object->SetScene(this);
-		Object->SetInitializeState(Object->Initialize());
+		T* NewObject = new T();
+		NewObject->SetScene(this);
+		NewObject->SetInitializeState(NewObject->Initialize());
 
-		return Object;
+		return NewObject;
+	}
+
+	template <typename T>
+	T* CreateActor() {
+		// type trait
+		static_assert(std::is_convertible_v<T*, Actor*>);
+
+		T* NewActor = new T();
+		NewActor->SetScene(this);
+		NewActor->SetInitializeState(NewActor->Initialize());
+
+		return NewActor;
 	}
 
 	BOOL AppendObject(ObjectInterface*);

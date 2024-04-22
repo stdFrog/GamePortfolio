@@ -139,6 +139,8 @@
     <ClInclude Include="DevScene.h" />
     <ClInclude Include="EditScene.h" />
     <ClInclude Include="EngineHeaders.h" />
+    <ClInclude Include="Flipbook.h" />
+    <ClInclude Include="FlipbookActor.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GameMath.h" />
@@ -176,6 +178,8 @@
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="DevScene.cpp" />
     <ClCompile Include="EditScene.cpp" />
+    <ClCompile Include="Flipbook.cpp" />
+    <ClCompile Include="FlipbookActor.cpp" />
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="GameMath.cpp" />
     <ClCompile Include="GameObject.cpp" />

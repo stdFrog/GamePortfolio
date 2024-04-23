@@ -179,6 +179,12 @@
     <ClInclude Include="FlipbookActor.h">
       <Filter>소스 파일\07.Object\GameObject\Unreal</Filter>
     </ClInclude>
+    <ClInclude Include="CameraObject.h">
+      <Filter>소스 파일\04.GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>소스 파일\03.GameMath</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GamePortfolio.cpp">
@@ -276,6 +282,12 @@
     </ClCompile>
     <ClCompile Include="FlipbookActor.cpp">
       <Filter>소스 파일\07.Object\GameObject\Unreal</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraObject.cpp">
+      <Filter>소스 파일\04.GameEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>소스 파일\03.GameMath</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

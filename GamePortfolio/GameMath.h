@@ -101,6 +101,8 @@ public:
     }
 
     static float ApproximateSqrt(const float N) {
+        // 2.f = 0100 0000 0000 0000 0000 0000 0000 0000
+        // *(int*)&N >>= 1 : 0010 0000 0000 0000 ...
         float x = 1.f;
         int i = ((*(int*)&N) >> 1) + ((*(int*)&x) >> 1);
 

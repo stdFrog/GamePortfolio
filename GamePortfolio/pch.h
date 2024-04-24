@@ -12,6 +12,8 @@
 // Common Utility Library
 #include "GameMath.h"
 #include "Vector.h"
+#include "Matrix.h"
+#include "Transform.h"
 #include "StandardLibrary.h"
 #include "WindowsUtility.h"
 

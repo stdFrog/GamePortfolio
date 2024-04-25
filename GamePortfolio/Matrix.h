@@ -1,5 +1,4 @@
 #pragma once
-
 const int DIMENSION = 3;
 /*
 	행렬은 선형 변환의 계산 과정을 체계화하여 손쉽게 계산할 수 있는 편리한 도구이다.

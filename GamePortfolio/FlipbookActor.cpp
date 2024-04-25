@@ -39,11 +39,17 @@ void FlipbookActor::Render(HDC hDC) {
 	if (_Flipbook == NULL) { return; }
 
 	const FlipbookInfo& I = _Flipbook->GetInfo();
+	const auto& Scene = dynamic_cast<DevScene*>(_Scene);
+	Vector CameraPosition = Scene->GetMainCamera().GetTransform().GetPosition();
+
+	// 트랜스폼 정보를 사용하지 않았을 때(FlipbookActor)
+	LONG Width, Height;
+	WindowsUtility::GetWindowSize(GetForegroundWindow(), &Width, &Height);
 
 	TransparentBlt(
 		hDC,
-		static_cast<int>(_Position.x - I.size.x / 2),
-		static_cast<int>(_Position.y - I.size.y / 2),
+		static_cast<int>(_Position.x - I.size.x / 2 - (CameraPosition.x - (Width - 264) / 2)),
+		static_cast<int>(_Position.y - I.size.y / 2 - (CameraPosition.y - Height / 2)),
 		static_cast<int>(I.size.x),
 		static_cast<int>(I.size.y),
 		I.texture->GetTextureDC(),

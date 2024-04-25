@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Texture.h"
 #include "Sprite.h"
+#include "RectCollider.h"
+#include "CircleCollider.h"
 
 DevScene::DevScene() {
 	_hWnd = GetForegroundWindow();
@@ -12,19 +14,26 @@ DevScene::~DevScene() {
 }
 
 void DevScene::CleanUp() {
-	std::for_each(_Actors.begin(), _Actors.end(), [=](Actor* Remove) {delete Remove; });
-	_Actors.clear();
+	for (int i = 0; i < _Actors->size(); i++) {
+		for (int j = 0; j < _Actors[i].size(); j++) {
+			delete _Actors[i][j];
+		}
+		_Actors[i].clear();
+	}
+
+	std::for_each(_Colliders.begin(), _Colliders.end(), [=](Collider* Remove) {delete Remove; });
+	_Colliders.clear();
 }
 
 BOOL DevScene::AppendActor(Actor* NewObject) {
 	if (NewObject == NULL) { return FALSE; }
 
-	auto it = std::find(_Actors.begin(), _Actors.end(), NewObject);
-	if (it != _Actors.end()) {
-		return FALSE;
+	int type = NewObject->GetLayerType();
+	for (int i = 0; i < _Actors[type].size(); i++) {
+		if (NewObject == _Actors[type][i]) { return FALSE; }
 	}
 
-	_Actors.push_back(NewObject);
+	_Actors[NewObject->GetLayerType()].push_back(NewObject);
 
 	return TRUE;
 }
@@ -32,10 +41,30 @@ BOOL DevScene::AppendActor(Actor* NewObject) {
 BOOL DevScene::RemoveActor(Actor* Target) {
 	if (Target == NULL) { return FALSE; }
 
-	auto it = std::remove(_Actors.begin(), _Actors.end(), Target);
-	_Actors.erase(it, _Actors.end());
+	// vector<Actor*>& V = _Actors[Target->GetLayerType()];
+	// std::erase(std:;remove(V.begin(), V.end(), Target), V.end());
 
-	delete Target;
+	int type = Target->GetLayerType();
+	for (int i = 0; i < _Actors[type].size(); i++) {
+		if (Target == _Actors[type][i]) { delete _Actors[type][i]; return TRUE; }
+	}
+
+	return FALSE;
+}
+
+BOOL DevScene::AppendCollider(Collider* NewCollider) {
+	auto it = std::find(_Colliders.begin(), _Colliders.end(), NewCollider);
+	if (it != _Colliders.end()) { return FALSE; }
+
+	_Colliders.push_back(NewCollider);
+	return TRUE;
+}
+
+BOOL DevScene::RemoveCollider(Collider* Target) {
+	auto findIt = std::find(_Colliders.begin(), _Colliders.end(), Target);
+
+	if (findIt == _Colliders.end()) { return FALSE; }
+	_Colliders.erase(findIt);
 
 	return TRUE;
 }
@@ -93,19 +122,53 @@ BOOL DevScene::Initialize() {
 		
 		SpriteActor* background = CreateActor<SpriteActor>();
 		background->SetSprite(Temp);
+		background->SetLayerType(LAYER_BACKGROUND);
 		const Vector Size = Temp->GetSize();
-		background->SetPosition(Vector(Size.x / 2, Size.y / 2));
+		background->SetPosition(Vector(Size.x, Size.y));
 		
 		AppendActor(background);
 	}
-	
+
 	{
+		/*
+			객체간의 그려질 순서를 일반 열거형 타입으로 구분지었다.
+
+			간혹, 본인 같은 초보자가 그리기 순서를 헷갈리면 마땅히 그려져야 할 객체가
+			화면에 그려지지 않을 수 있다.
+
+			따라서, 아래와 같이 그려질 순서를 구분 지을 방법을 모색해 적용해두어야
+			실수할 일이 적어진다.
+
+			확실히 코드가 길어지긴 한다.
+		*/
 		Player* player = CreateActor<Player>();
+		{
+			CircleCollider* collider = new CircleCollider;
+			collider->SetRadius(50.f);
+			AppendCollider(collider);
+			player->AppendComponent(collider);
+		}
+
 		AppendActor(player);
 	}
 
-	for (Actor* actor : _Actors) {
-		actor->Initialize();
+	{
+		Actor* CollisionTestCircle = CreateActor<Actor>();
+		{
+			CircleCollider* collider = new CircleCollider;
+			collider->SetRadius(50.f);
+			CollisionTestCircle->AppendComponent(collider);
+			AppendCollider(collider);
+			CollisionTestCircle->SetPosition(Vector(400, 200));
+		}
+
+		AppendActor(CollisionTestCircle);
+	}
+
+	for (const std::vector<Actor*>& type : _Actors) {
+		for (Actor* actor : type) {
+			actor->Initialize();
+		}
 	}
 
 	/*
@@ -221,12 +284,12 @@ BOOL DevScene::Initialize() {
 				Sprite* sprite = Engine->GetSprite(L"Start_On");
 				SpriteRenderer* SRD = new SpriteRenderer();
 				SRD->SetSprite(sprite);
-				player->AddComponent(SRD);
+				player->AppendComponent(SRD);
 			}
 
 			{
 				PlayerMoveScript* Move = new PlayerMoveScript();
-				player->AddComponent(Move);
+				player->AppendComponent(Move);
 			}
 
 			_GameObject = player;
@@ -239,8 +302,29 @@ BOOL DevScene::Initialize() {
 }
 
 void DevScene::Update(float dtSeconds) {
-	for (Actor* actor : _Actors) {
-		actor->Update(dtSeconds);
+	// 충돌 처리
+	std::vector<Collider*>& Colliders = _Colliders;
+	for (int i = 0; i < Colliders.size(); i++) {
+		for (int j = i + 1; j < Colliders.size(); j++) {
+			Collider* P1, * P2;
+			P1 = Colliders[i];
+			P2 = Colliders[j];
+
+			if (P1->CheckCollision(P2)) {
+				// TODO:
+				WindowsUtility::Trace(TEXT("Collision Occured"));
+			}
+			else {
+				
+			}
+		}
+	}
+
+	// 갱신
+	for (const std::vector<Actor*>& type : _Actors) {
+		for (Actor* actor : type) {
+			actor->Update(dtSeconds);
+		}
 	}
 }
 
@@ -253,8 +337,9 @@ void DevScene::Render(HDC hDC) {
 	// if (bRepaint) { WindowsUtility::GetWindowSize(_hWnd, &iWidth, &iHeight); }
 
 	// BitBlt(hDC, 0, 0, iWidth, iHeight, sprite->GetSpriteDC(), sprite->GetPosition().x, sprite->GetPosition().y, SRCCOPY);
-	
-	for (Actor* actor : _Actors) {
-		actor->Render(hDC);
+	for (const std::vector<Actor*>& type : _Actors) {
+		for (Actor* actor : type) {
+			actor->Render(hDC);
+		}
 	}
 }

@@ -20,6 +20,14 @@ protected:
 	InputManager GameEngine::* _InputInstance;
 	std::vector<ObjectInterface*> _Objects;				// 각 씬에 개별 배치할 것인가?
 
+private:
+	// 씬 마다 카메라를 활용하는 방법이 다를 수 있다.
+	CameraObject _MainCamera;
+
+public:
+	CameraObject& GetMainCamera() { return _MainCamera; }
+	const CameraObject& GetMainCamera() const { return _MainCamera; }
+
 public:
 	BaseScene();
 	virtual ~BaseScene();
@@ -37,18 +45,6 @@ public:
 		NewObject->SetInitializeState(NewObject->Initialize());
 
 		return NewObject;
-	}
-
-	template <typename T>
-	T* CreateActor() {
-		// type trait
-		static_assert(std::is_convertible_v<T*, Actor*>);
-
-		T* NewActor = new T();
-		NewActor->SetScene(this);
-		NewActor->SetInitializeState(NewActor->Initialize());
-
-		return NewActor;
 	}
 
 	BOOL AppendObject(ObjectInterface*);

@@ -27,10 +27,14 @@ protected:
 	Vector _Position;
 	Status _Status;
 	BaseScene* _Scene;
+	Transform _Transform;
 
 public:
 	ObjectType GetObjectType() { return _Type; }
 	Vector GetPosition() { return _Position; }
+	BaseScene* GetScene() { return _Scene; }
+
+public:
 	void SetPosition(Vector Position) { _Position = Position; }
 	void SetScene(BaseScene* Scene) { _Scene = Scene; }
 	void SetType(ObjectType Type) { _Type = Type; }

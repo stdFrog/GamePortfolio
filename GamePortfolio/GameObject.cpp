@@ -30,6 +30,6 @@ void GameObject::Render(HDC hDC) {
 	}
 }
 
-void GameObject::AddComponent(Component* Other) {
+void GameObject::AppendComponent(Component* Other) {
 	_Components.push_back(Other);
 }

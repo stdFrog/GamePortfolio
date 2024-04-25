@@ -135,7 +135,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h" />
+    <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="CameraObject.h" />
+    <ClInclude Include="CircleCollider.h" />
+    <ClInclude Include="Collider.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="DevScene.h" />
     <ClInclude Include="EditScene.h" />
@@ -150,7 +153,6 @@
     <ClInclude Include="GameRenderer.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="InputManager.h" />
-    <ClInclude Include="LobiScene.h" />
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="Missile.h" />
@@ -160,6 +162,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerMoveScript.h" />
+    <ClInclude Include="RectCollider.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="BaseScene.h" />
     <ClInclude Include="ResourceBase.h" />
@@ -177,7 +180,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="CameraComponent.cpp" />
     <ClCompile Include="CameraObject.cpp" />
+    <ClCompile Include="CircleCollider.cpp" />
+    <ClCompile Include="Collider.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="DevScene.cpp" />
     <ClCompile Include="EditScene.cpp" />
@@ -190,7 +196,6 @@
     <ClCompile Include="GameRenderer.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="InputManager.cpp" />
-    <ClCompile Include="LobiScene.cpp" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="Missile.cpp" />
@@ -202,6 +207,7 @@
     <ClCompile Include="BaseScene.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerMoveScript.cpp" />
+    <ClCompile Include="RectCollider.cpp" />
     <ClCompile Include="ResourceBase.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Sprite.cpp" />

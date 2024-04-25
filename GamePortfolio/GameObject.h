@@ -23,7 +23,7 @@ protected:
 	std::vector<Component*> _Components;
 
 public:
-	void AddComponent(Component*);
+	void AppendComponent(Component*);
 
 public:
 	GameObject();

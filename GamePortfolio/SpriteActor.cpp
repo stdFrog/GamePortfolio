@@ -29,18 +29,18 @@ void SpriteActor::Render(HDC hDC) {
 
 	Vector Size = _Sprite->GetSize();
 
-	/*BitBlt(hDC,
-		_Position.x - Size.x / 2,
-		_Position.y - Size.y / 2,
-		WindowsUtility::WindowsSize.x,
-		WindowsUtility::WindowsSize.y,
-		_Sprite->GetSpriteDC(),
-		_Sprite->GetPosition().x,
-		_Sprite->GetPosition().y,
-		SRCCOPY);*/
+	const auto& Scene = dynamic_cast<DevScene*>(_Scene);
+	Vector CameraPosition = Scene->GetMainCamera().GetTransform().GetPosition();
+
+	LONG Width, Height;
+	WindowsUtility::GetWindowSize(GetForegroundWindow(), &Width, &Height);
+
+	// 트랜스폼 정보를 사용하지 않았을 때(SpriteActor)
+	// 프로젝트 시작부터 강의에서 800 x 600 크기로 맞춰놨기 때문에
+	// 뷰 포트 해상도에 맞게 하드 코딩함
 	TransparentBlt(hDC,
-		static_cast<int>(_Position.x - Size.x / 2),
-		static_cast<int>(_Position.y - Size.y / 2),
+		static_cast<int>(_Position.x - Size.x - (CameraPosition.x - (Width - 264) / 2)),
+		static_cast<int>(_Position.y - Size.y - (CameraPosition.y - Height / 2)),
 		static_cast<int>(Size.x),
 		static_cast<int>(Size.y),
 		_Sprite->GetSpriteDC(),

@@ -10,11 +10,11 @@
 #include <tchar.h>
 
 // Common Utility Library
+#include "StandardLibrary.h"
 #include "GameMath.h"
 #include "Vector.h"
 #include "Matrix.h"
 #include "Transform.h"
-#include "StandardLibrary.h"
 #include "WindowsUtility.h"
 
 // Global Manager

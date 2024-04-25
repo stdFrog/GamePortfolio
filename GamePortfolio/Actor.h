@@ -12,8 +12,21 @@
 	씬을 구성하는 객체는 결국 ObjectInterface의 원형과 다르지 않다.
 */
 
+class Component;
+
 class Actor : public ObjectInterface
 {
+protected:
+	LAYER_TYPE _Layer = LAYER_OBJECT;
+	std::vector<Component*> _Components;
+
+public:
+	void AppendComponent(Component*);
+	void RemoveComponent(Component*);
+
+	void SetLayerType(LAYER_TYPE Layer) { _Layer = Layer; }
+	LAYER_TYPE GetLayerType() { return _Layer; }
+
 public:
 	Actor(ObjectType Type = ObjectType::None);
 	virtual ~Actor();

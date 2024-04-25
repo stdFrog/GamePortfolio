@@ -2,6 +2,7 @@
 
 class Actor;
 class GameObject;
+class Collider;
 
 /*
 	등장 요소를 씬마다 개별 관리한다면 지금처럼 관리 함수를 오버라이딩 하여
@@ -18,12 +19,38 @@ class GameObject;
 */
 class DevScene : public BaseScene
 {
-	std::vector<Actor*> _Actors;
+	std::vector<Actor*> _Actors[LAYER_TYPE_LAST_COUNT];
+	std::vector<Collider*> _Colliders;
+	//std::vector<Actor*> _Actors;
 
 	HWND _hWnd;
 	LONG iWidth, iHeight;
 
 public:
+	template <typename T>
+	T* CreateCollider() {
+		static_assert(std::is_convertible_v<T*, Collider*>);
+		T* NewCollider = new T();
+
+		return NewCollider;
+	}
+
+	BOOL AppendCollider(Collider*);
+	BOOL RemoveCollider(Collider*);
+
+public:
+	template <typename T>
+	T* CreateActor() {
+		// type trait
+		static_assert(std::is_convertible_v<T*, Actor*>);
+
+		T* NewActor = new T();
+		NewActor->SetScene(this);
+		NewActor->SetInitializeState(NewActor->Initialize());
+
+		return NewActor;
+	}
+
 	BOOL AppendActor(Actor*);
 	BOOL RemoveActor(Actor*);
 	void CleanUp();
@@ -37,4 +64,3 @@ public:
 	virtual void Update(float);
 	virtual void Render(HDC);
 };
-

@@ -15,14 +15,6 @@ class GameEngine
     BOOL _bAllInitialized = FALSE;
     BOOL _bOnResizeNotify = FALSE;
 
-private:
-    // 씬 마다 카메라를 활용하는 방법이 다를 수 있다.
-    CameraObject _MainCamera;
-
-public:
-    CameraObject& GetMainCamera() { return _MainCamera; }
-    const CameraObject& GetMainCamera() const { return _MainCamera; }
-
 public:
     void SetOnResizeState(BOOL bTrue) { _bOnResizeNotify = bTrue; }
     BOOL GetOnResizeState() { return _bOnResizeNotify; }

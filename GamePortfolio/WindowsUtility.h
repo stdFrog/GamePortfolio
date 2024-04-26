@@ -9,10 +9,6 @@ namespace WindowsUtility
 {
 	static POINT WindowsSize = {1280, 960};
 
-	static BOOL IsIntersect(Vector P1, Vector P2) {
-		return FALSE;
-	}
-
 	static void GetWindowSize(HWND hWnd, PLONG Width, PLONG Height) {
 		RECT crt;
 

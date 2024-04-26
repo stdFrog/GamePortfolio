@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <set>
 #include <list>
 #include <array>
 #include <memory>
@@ -12,6 +13,7 @@
 #include <functional>
 #include <filesystem>
 #include <unordered_map>
+#include <unordered_set>
 
 #pragma comment(lib, "MsImg32")
 

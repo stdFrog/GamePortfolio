@@ -96,3 +96,11 @@ void Player::Render(HDC hDC) {
 		Matrix S = ViewMatrix * _Transform.GetModelingMatrix();
 	*/
 }
+
+void Player::OnComponentBeginOverlap(Collider* I, Collider* Target) {
+
+}
+
+void Player::OnComponentEndOverlap(Collider* I, Collider* Target) {
+
+}

@@ -21,6 +21,16 @@ enum class ColliderType {
 */
 class Collider : public Component
 {
+	std::unordered_set<Collider*> _ColliderSet;
+
+protected:
+	ColliderType _Type;
+	BOOL _bVisible = TRUE;
+
+public:
+	std::unordered_set<Collider*>& GetColliderSet() { return _ColliderSet; }
+	const std::unordered_set<Collider*>& GetColliderSet() const { return _ColliderSet; }
+
 public:
 	static BOOL (*Select(Collider* P1, Collider* P2))(Collider*, Collider*);
 	static BOOL CollisionCircleToCircle(Collider*, Collider*);
@@ -37,10 +47,6 @@ public:
 
 public:
 	static BOOL CollisionPointToLine(Collider*, Collider*);
-
-protected:
-	ColliderType _Type;
-	BOOL _bVisible = TRUE;
 
 public:
 	void SetVisible(BOOL bVisible) { _bVisible = bVisible; }

@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Actor.h"
 #include "Component.h"
+#include "Collider.h"
 
 Actor::Actor(ObjectType Type) : ObjectInterface(Type){
 
@@ -46,4 +47,12 @@ void Actor::RemoveComponent(Component* Target) {
 
 	if (findIt == _Components.end()) { return; }
 	_Components.erase(findIt);
+}
+
+void Actor::OnComponentBeginOverlap(Collider* I, Collider* Target) {
+
+}
+
+void Actor::OnComponentEndOverlap(Collider* I, Collider* Target) {
+
 }

@@ -27,6 +27,7 @@ BOOL Collider::CheckCollision(Collider* Other) {
 	ColliderType Type = Other->GetColliderType();
 
 	switch (Type) {
+
 	default:
 		break;
 	}
@@ -117,7 +118,48 @@ BOOL Collider::CollisionRectToRect(Collider* P1, Collider* P2) {
 	Vector PositionOne = CastOne->GetOwner()->GetPosition();
 	Vector PositionTwo = CastTwo->GetOwner()->GetPosition();
 
-	return WindowsUtility::IsIntersect(PositionOne, PositionTwo);
+	Vector RectOne = CastOne->GetSize();
+	Vector RectTwo = CastTwo->GetSize();
+
+	Vector L1, R1;
+	L1 = Vector(
+		GameMath::MIN(PositionOne.x, PositionOne.x - RectOne.x / 2),
+		GameMath::MIN(PositionOne.y, PositionOne.y - RectOne.y / 2)
+	);
+
+	R1 = Vector(
+		GameMath::MAX(PositionOne.x, PositionOne.x + RectOne.x / 2),
+		GameMath::MAX(PositionOne.y, PositionOne.y + RectOne.y / 2)
+	);
+	
+	Vector L2, R2;
+	L2 = Vector(
+		GameMath::MIN(PositionTwo.x, PositionTwo.x - RectTwo.x / 2),
+		GameMath::MIN(PositionTwo.y, PositionTwo.y - RectTwo.y / 2)
+	);
+
+	R2 = Vector(
+		GameMath::MAX(PositionTwo.x, PositionTwo.x + RectTwo.x / 2),
+		GameMath::MAX(PositionTwo.y, PositionTwo.y + RectTwo.y / 2)
+	);
+
+	if (R1.x < L2.x) {
+		return FALSE;
+	}
+
+	if (R1.y < L2.y) {
+		return FALSE;
+	}
+
+	if (R2.x < L1.x) {
+		return FALSE;
+	}
+
+	if (R2.y < L1.y) {
+		return FALSE;
+	}
+
+	return TRUE;
 }
 
 BOOL Collider::CollisionPointToRect(Collider* P1, Collider* P2) {

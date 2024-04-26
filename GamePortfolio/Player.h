@@ -15,6 +15,10 @@ class Player : public FlipbookActor
 	Flipbook* _FlipbookRight = NULL;
 
 public:
+	virtual void OnComponentBeginOverlap(Collider*, Collider*);
+	virtual void OnComponentEndOverlap(Collider*, Collider*);
+
+public:
 	Player();
 	virtual ~Player();
 

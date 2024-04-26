@@ -3,6 +3,7 @@
 class Actor;
 class GameObject;
 class Collider;
+class UI;
 
 /*
 	등장 요소를 씬마다 개별 관리한다면 지금처럼 관리 함수를 오버라이딩 하여
@@ -22,6 +23,9 @@ class DevScene : public BaseScene
 	std::vector<Actor*> _Actors[LAYER_TYPE_LAST_COUNT];
 	std::vector<Collider*> _Colliders;
 	//std::vector<Actor*> _Actors;
+	// 일반적으로 Actor나 오브젝트로 분리하지 않고 씬 내부에서 관리하는 객체로 생성하여
+	// 필요할 때만 호출해 사용한다.
+	std::vector<UI*> _UserInterfaces;
 
 	HWND _hWnd;
 	LONG iWidth, iHeight;

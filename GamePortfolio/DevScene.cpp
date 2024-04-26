@@ -3,6 +3,8 @@
 #include "Sprite.h"
 #include "RectCollider.h"
 #include "CircleCollider.h"
+#include "UI.h"
+#include "Button.h"
 
 DevScene::DevScene() {
 	_hWnd = GetForegroundWindow();
@@ -23,6 +25,9 @@ void DevScene::CleanUp() {
 
 	std::for_each(_Colliders.begin(), _Colliders.end(), [=](Collider* Remove) {delete Remove; });
 	_Colliders.clear();
+
+	std::for_each(_UserInterfaces.begin(), _UserInterfaces.end(), [=](UI* Remove) {delete Remove; });
+	_UserInterfaces.clear();
 }
 
 BOOL DevScene::AppendActor(Actor* NewObject) {
@@ -165,6 +170,16 @@ BOOL DevScene::Initialize() {
 		AppendActor(CollisionTestCircle);
 	}
 
+	{
+		Button* Btn = new Button();
+		Btn->SetSprite(Engine->GetSprite(L"Start_Off"), BS_DEFAULT);
+		Btn->SetSprite(Engine->GetSprite(L"Start_On"), BS_CLICKED);
+		Btn->SetPosition(Vector(200, 200));
+		Btn->SetOwner(this);
+		Btn->Initialize();
+		_UserInterfaces.push_back(Btn);
+	}
+
 	for (const std::vector<Actor*>& type : _Actors) {
 		for (Actor* actor : type) {
 			actor->Initialize();
@@ -304,6 +319,7 @@ BOOL DevScene::Initialize() {
 void DevScene::Update(float dtSeconds) {
 	// 충돌 처리
 	std::vector<Collider*>& Colliders = _Colliders;
+
 	for (int i = 0; i < Colliders.size(); i++) {
 		for (int j = i + 1; j < Colliders.size(); j++) {
 			Collider* P1, * P2;
@@ -312,11 +328,27 @@ void DevScene::Update(float dtSeconds) {
 
 			if (P1->CheckCollision(P2)) {
 				// TODO:
-				WindowsUtility::Trace(TEXT("Collision Occured"));
+				if (P1->GetColliderSet().contains(P2) == FALSE) {
+					P1->GetOwner()->OnComponentBeginOverlap(P1, P2);
+					P2->GetOwner()->OnComponentBeginOverlap(P2, P1);
+					P1->GetColliderSet().insert(P2);
+					P2->GetColliderSet().insert(P1);
+					WindowsUtility::Trace(TEXT("Collision Occured"));
+				}
 			}
 			else {
-				
+				if (P1->GetColliderSet().contains(P2)) {
+					P1->GetOwner()->OnComponentEndOverlap(P1, P2);
+					P2->GetOwner()->OnComponentEndOverlap(P2, P1);
+					P1->GetColliderSet().erase(P2);
+					P2->GetColliderSet().erase(P1);
+					WindowsUtility::Trace(TEXT("Collision Ended"));
+				}
 			}
+		}
+
+		for (UI* ui : _UserInterfaces) {
+			ui->Update(dtSeconds);
 		}
 	}
 
@@ -341,5 +373,9 @@ void DevScene::Render(HDC hDC) {
 		for (Actor* actor : type) {
 			actor->Render(hDC);
 		}
+	}
+
+	for (UI* ui : _UserInterfaces) {
+		ui->Render(hDC);
 	}
 }

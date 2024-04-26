@@ -13,6 +13,7 @@
 */
 
 class Component;
+class Collider;
 
 class Actor : public ObjectInterface
 {
@@ -24,8 +25,13 @@ public:
 	void AppendComponent(Component*);
 	void RemoveComponent(Component*);
 
+public:
 	void SetLayerType(LAYER_TYPE Layer) { _Layer = Layer; }
 	LAYER_TYPE GetLayerType() { return _Layer; }
+
+public:
+	virtual void OnComponentBeginOverlap(Collider*, Collider*);
+	virtual void OnComponentEndOverlap(Collider*, Collider*);
 
 public:
 	Actor(ObjectType Type = ObjectType::None);

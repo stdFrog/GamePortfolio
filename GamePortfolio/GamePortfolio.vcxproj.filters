@@ -48,9 +48,6 @@
     <Filter Include="소스 파일\01.Main\01-2.Child">
       <UniqueIdentifier>{aefee5b2-da1a-42ae-8d7a-06141e757d1a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\TempForlder">
-      <UniqueIdentifier>{b2a25710-77c6-4ee8-8596-ab7136a9e995}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\04.GameEngine\04-1.Resources">
       <UniqueIdentifier>{27a390af-051c-49bf-a800-787b48885b9b}</UniqueIdentifier>
     </Filter>
@@ -65,6 +62,9 @@
     </Filter>
     <Filter Include="소스 파일\04.GameEngine\04-2.Components\Collision">
       <UniqueIdentifier>{24074350-2a27-4a14-8b8f-61e0b2a7c581}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\06.Scenes\UserInterface">
+      <UniqueIdentifier>{925cf734-6c00-43f0-b4fe-9d02c15a590c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -197,6 +197,12 @@
     <ClInclude Include="RectCollider.h">
       <Filter>소스 파일\04.GameEngine\04-2.Components\Collision</Filter>
     </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>소스 파일\06.Scenes\UserInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>소스 파일\06.Scenes\UserInterface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GamePortfolio.cpp">
@@ -309,6 +315,12 @@
     </ClCompile>
     <ClCompile Include="RectCollider.cpp">
       <Filter>소스 파일\04.GameEngine\04-2.Components\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>소스 파일\06.Scenes\UserInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="UI.cpp">
+      <Filter>소스 파일\06.Scenes\UserInterface</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

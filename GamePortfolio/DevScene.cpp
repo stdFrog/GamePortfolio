@@ -5,6 +5,7 @@
 #include "CircleCollider.h"
 #include "UI.h"
 #include "Button.h"
+#include "ContentsPanel.h"
 
 DevScene::DevScene() {
 	_hWnd = GetForegroundWindow();
@@ -170,7 +171,10 @@ BOOL DevScene::Initialize() {
 		AppendActor(CollisionTestCircle);
 	}
 
-	{
+	/*{
+		UI를 확장하여 Panel이라는 관리 클래스를 만들었다.
+		앞으로 생성될 UI는 Panel이 총 통합하여 관리한다.
+
 		Button* Btn = new Button();
 		Btn->SetSprite(Engine->GetSprite(L"Start_Off"), BS_DEFAULT);
 		Btn->SetSprite(Engine->GetSprite(L"Start_On"), BS_CLICKED);
@@ -178,12 +182,20 @@ BOOL DevScene::Initialize() {
 		Btn->SetOwner(this);
 		Btn->Initialize();
 		_UserInterfaces.push_back(Btn);
+	}*/
+	{
+		UI* GUI = CreateInterface<ContentsPanel>();
+		_UserInterfaces.push_back(GUI);
 	}
 
 	for (const std::vector<Actor*>& type : _Actors) {
 		for (Actor* actor : type) {
 			actor->Initialize();
 		}
+	}
+
+	for (UI* ui : _UserInterfaces) {
+		ui->Initialize();
 	}
 
 	/*

@@ -141,6 +141,8 @@
     <ClInclude Include="CircleCollider.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="ContentsButton.h" />
+    <ClInclude Include="ContentsPanel.h" />
     <ClInclude Include="DevScene.h" />
     <ClInclude Include="EditScene.h" />
     <ClInclude Include="EngineHeaders.h" />
@@ -160,6 +162,7 @@
     <ClInclude Include="Monster.h" />
     <ClInclude Include="ObjectHeaders.h" />
     <ClInclude Include="ObjectInterface.h" />
+    <ClInclude Include="Panel.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerMoveScript.h" />
@@ -188,6 +191,8 @@
     <ClCompile Include="CircleCollider.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="Component.cpp" />
+    <ClCompile Include="ContentsButton.cpp" />
+    <ClCompile Include="ContentsPanel.cpp" />
     <ClCompile Include="DevScene.cpp" />
     <ClCompile Include="EditScene.cpp" />
     <ClCompile Include="Flipbook.cpp" />
@@ -204,6 +209,7 @@
     <ClCompile Include="Missile.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="ObjectInterface.cpp" />
+    <ClCompile Include="Panel.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>

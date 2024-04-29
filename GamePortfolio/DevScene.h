@@ -4,7 +4,6 @@ class Actor;
 class GameObject;
 class Collider;
 class UI;
-
 /*
 	등장 요소를 씬마다 개별 관리한다면 지금처럼 관리 함수를 오버라이딩 하여
 	필요한 처리를 해야하기 때문에 등장 요소가 많지 않다면 BaseScene에서 통합해서 관리하는 것도 좋다.
@@ -29,6 +28,15 @@ class DevScene : public BaseScene
 
 	HWND _hWnd;
 	LONG iWidth, iHeight;
+
+public:
+	template <typename T>
+	T* CreateInterface() {
+		static_assert(std::is_convertible_v<T*, UI*>);
+		T* NewInterface = new T(this);
+
+		return NewInterface;
+	}
 
 public:
 	template <typename T>

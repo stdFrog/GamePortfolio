@@ -28,7 +28,7 @@ public:
 	virtual void Render(HDC);
 
 public:
-	UI();
+	UI(BaseScene* CurrentScene = NULL);
 	virtual ~UI();
 };
 

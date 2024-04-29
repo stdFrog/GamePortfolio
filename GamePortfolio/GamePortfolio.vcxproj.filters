@@ -66,6 +66,12 @@
     <Filter Include="소스 파일\06.Scenes\UserInterface">
       <UniqueIdentifier>{925cf734-6c00-43f0-b4fe-9d02c15a590c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\06.Scenes\UserInterface\CallbackFunction">
+      <UniqueIdentifier>{601d6e74-e393-4d10-940f-3f4f726d4ed3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\06.Scenes\UserInterface\Contents">
+      <UniqueIdentifier>{c9ed197a-d35e-4116-b759-9aa740d2328e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -203,6 +209,15 @@
     <ClInclude Include="UI.h">
       <Filter>소스 파일\06.Scenes\UserInterface</Filter>
     </ClInclude>
+    <ClInclude Include="Panel.h">
+      <Filter>소스 파일\06.Scenes\UserInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="ContentsPanel.h">
+      <Filter>소스 파일\06.Scenes\UserInterface\Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="ContentsButton.h">
+      <Filter>소스 파일\06.Scenes\UserInterface\Contents</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GamePortfolio.cpp">
@@ -321,6 +336,15 @@
     </ClCompile>
     <ClCompile Include="UI.cpp">
       <Filter>소스 파일\06.Scenes\UserInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="Panel.cpp">
+      <Filter>소스 파일\06.Scenes\UserInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="ContentsButton.cpp">
+      <Filter>소스 파일\06.Scenes\UserInterface\Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="ContentsPanel.cpp">
+      <Filter>소스 파일\06.Scenes\UserInterface\Contents</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

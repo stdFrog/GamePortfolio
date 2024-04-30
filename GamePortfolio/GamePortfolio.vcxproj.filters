@@ -218,6 +218,9 @@
     <ClInclude Include="ContentsButton.h">
       <Filter>소스 파일\06.Scenes\UserInterface\Contents</Filter>
     </ClInclude>
+    <ClInclude Include="TileMap.h">
+      <Filter>소스 파일\04.GameEngine\04-1.Resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GamePortfolio.cpp">
@@ -345,6 +348,9 @@
     </ClCompile>
     <ClCompile Include="ContentsPanel.cpp">
       <Filter>소스 파일\06.Scenes\UserInterface\Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="TileMap.cpp">
+      <Filter>소스 파일\04.GameEngine\04-1.Resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

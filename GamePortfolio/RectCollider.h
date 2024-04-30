@@ -4,7 +4,6 @@
 class RectCollider :public Collider
 {
 	using Super = Collider;
-
 	Vector _Size;
 
 public:

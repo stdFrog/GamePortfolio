@@ -5,7 +5,6 @@ class GameEngine;
 class Actor;
 class GameObject;
 class Collider;
-class Panel;
 
 enum class SceneType {
 	None,
@@ -108,9 +107,12 @@ public:
 	virtual ~BaseScene();
 
 public:
-	virtual void Update(float) = 0;
-	virtual void Render(HDC) = 0;
-	virtual BOOL Initialize() = 0;
+	/*
+		추상화 클래스로 설계하였으나 타일맵 제작을 위해 최상위 씬에서도 관리 함수를 사용하기로 한다.
+	*/
+	virtual void Update(float);
+	virtual void Render(HDC);
+	virtual BOOL Initialize();
 	void* GetInstance() { return _EngineInstance; }
 	void SetInstance(void* EngineInstance) { _EngineInstance = EngineInstance; }
 	// void SetInputInstance(void* EngineInstance, InputManager GameEngine::* InputInstance) { _EngineInstance = EngineInstance;  _InputInstance = InputInstance; }

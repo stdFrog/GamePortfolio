@@ -53,6 +53,9 @@ public:
 	ColliderType GetColliderType() { return _Type; }
 
 public:
+	static BOOL IsPointInCircle(Vector, Vector, float);
+
+public:
 	virtual BOOL Initialize();
 	virtual void Update(float);
 	virtual void Render(HDC);

@@ -108,7 +108,17 @@ BOOL DevScene::Initialize() {
 			AppendCollider(collider);
 			CollisionTestCircle->SetPosition(Vector(400, 200));
 		}
+		
+		Actor* CollisionTestRect = CreateActor<Actor>();
+		{
+			RectCollider* collider = new RectCollider();
+			collider->SetSize(Vector(50.f, 50.f));
+			CollisionTestRect->AppendComponent(collider);
+			AppendCollider(collider);
+			CollisionTestRect->SetPosition(Vector(400, 400));
+		}
 
+		AppendActor(CollisionTestRect);
 		AppendActor(CollisionTestCircle);
 	}
 
@@ -145,15 +155,23 @@ BOOL DevScene::Initialize() {
 			GUI->Initialize();
 	}*/
 
+	/*
+		리소스의 생성은 본래 게임이 시작됨과 동시에 이뤄지는게 일반적이라 한다.
+		따라서, BaseScene의 추상화를 제거한 이후로부터 아래와 같은 리소스는
+		BaseScene에서 관리하기로 한다.
+
 	for (const std::vector<Actor*>& type : _Actors) {
 		for (Actor* actor : type) {
 			actor->Initialize();
 		}
 	}
+	*/
 
 	/*for (UI* ui : _UserInterfaces) {
 		ui->Initialize();
 	}*/
+	
+	Super::Initialize();
 
 	/*
 		상용 게임엔진에서 등장인물을 관리하는 방법에 대해 알아보자.
@@ -286,65 +304,11 @@ BOOL DevScene::Initialize() {
 }
 
 void DevScene::Update(float dtSeconds) {
-	// 충돌 처리
-	std::vector<Collider*>& Colliders = _Colliders;
+	Super::Update(dtSeconds);
 
-	for (int i = 0; i < Colliders.size(); i++) {
-		for (int j = i + 1; j < Colliders.size(); j++) {
-			Collider* P1, * P2;
-			P1 = Colliders[i];
-			P2 = Colliders[j];
-
-			if (P1->CheckCollision(P2)) {
-				// TODO:
-				if (P1->GetColliderSet().contains(P2) == FALSE) {
-					P1->GetOwner()->OnComponentBeginOverlap(P1, P2);
-					P2->GetOwner()->OnComponentBeginOverlap(P2, P1);
-					P1->GetColliderSet().insert(P2);
-					P2->GetColliderSet().insert(P1);
-					WindowsUtility::Trace(TEXT("Collision Occured"));
-				}
-			}
-			else {
-				if (P1->GetColliderSet().contains(P2)) {
-					P1->GetOwner()->OnComponentEndOverlap(P1, P2);
-					P2->GetOwner()->OnComponentEndOverlap(P2, P1);
-					P1->GetColliderSet().erase(P2);
-					P2->GetColliderSet().erase(P1);
-					WindowsUtility::Trace(TEXT("Collision Ended"));
-				}
-			}
-		}
-
-		/*for (Panel* p : _GUIPanels) {
-			p->Update(dtSeconds);
-		}*/
-	}
-
-	// 갱신
-	for (const std::vector<Actor*>& type : _Actors) {
-		for (Actor* actor : type) {
-			actor->Update(dtSeconds);
-		}
-	}
 }
 
 void DevScene::Render(HDC hDC) {
-	// const auto& Engine = (GameEngine*)_EngineInstance;
-	// Texture* texture = Engine->GetTexture(L"Stage01");
-	// Sprite* sprite = Engine->GetSprite(L"Start_On");
+	Super::Render(hDC);
 
-	// BOOL bRepaint = Engine->GetOnResizeState();
-	// if (bRepaint) { WindowsUtility::GetWindowSize(_hWnd, &iWidth, &iHeight); }
-
-	// BitBlt(hDC, 0, 0, iWidth, iHeight, sprite->GetSpriteDC(), sprite->GetPosition().x, sprite->GetPosition().y, SRCCOPY);
-	for (const std::vector<Actor*>& type : _Actors) {
-		for (Actor* actor : type) {
-			actor->Render(hDC);
-		}
-	}
-
-	/*for (Panel* p : _GUIPanels) {
-		p->Render(hDC);
-	}*/
 }

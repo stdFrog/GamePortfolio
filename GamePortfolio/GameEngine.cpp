@@ -25,6 +25,13 @@ GameEngine::~GameEngine() {
     }
 
     _Flipbooks.clear();
+
+    for (auto& M : _TileMaps) {
+        delete M.second;
+        M.second = NULL;
+    }
+
+    _TileMaps.clear();
 }
 
 /*
@@ -34,6 +41,23 @@ Texture& GameEngine::CreateTexture(const std::wstring& Hash, const std::wstring&
     return *_Textures.at(Hash).get();
 }
 */
+
+TileMap* GameEngine::CreateTileMap(const std::wstring& Hash) {
+    if (_TileMaps.find(Hash) != _TileMaps.end()) { return _TileMaps[Hash]; }
+
+    TileMap* NewTileMap = new TileMap();
+    _TileMaps[Hash] = NewTileMap;
+
+    return NewTileMap;
+}
+
+TileMap* GameEngine::LoadTileMap(const std::wstring& Hash, const std::wstring& Path) {
+    return NULL;
+}
+
+void GameEngine::SaveTileMap(const std::wstring& Hash, const std::wstring& Path) {
+
+}
 
 Texture* GameEngine::LoadTexture(const std::wstring& Hash, const std::wstring& Path, int Transparent) {
     // 이미지 불러오고 해쉬로 저장

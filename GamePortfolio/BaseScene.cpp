@@ -8,6 +8,81 @@ BaseScene::~BaseScene() {
 	CleanUp();
 }
 
+BOOL BaseScene::Initialize() {
+	/* 타일맵 제작을 위해 추상화 클래스를 일반 클래스로 변경 */
+	
+	/* 게임 시작 이후 가져야 할 자원을 최상위 클래스에서 관리한다. */
+	for (const std::vector<Actor*>& type : _Actors) {
+		for (Actor* actor : type) {
+			actor->Initialize();
+		}
+	}
+
+	/*Panel* GUI = CreateUIPanel<ContentsPanel>();
+	AppendUIPanel(GUI);
+
+	GUI->Initialize();*/
+
+	return TRUE;
+}
+
+void BaseScene::Update(float dtSeconds) {
+
+	// 충돌 처리
+	std::vector<Collider*>& Colliders = _Colliders;
+
+	for (int i = 0; i < Colliders.size(); i++) {
+		for (int j = i + 1; j < Colliders.size(); j++) {
+			Collider* P1, * P2;
+			P1 = Colliders[i];
+			P2 = Colliders[j];
+
+			if (P1->CheckCollision(P2)) {
+				// TODO:
+				if (P1->GetColliderSet().contains(P2) == FALSE) {
+					P1->GetOwner()->OnComponentBeginOverlap(P1, P2);
+					P2->GetOwner()->OnComponentBeginOverlap(P2, P1);
+					P1->GetColliderSet().insert(P2);
+					P2->GetColliderSet().insert(P1);
+					WindowsUtility::Trace(TEXT("Collision Occured"));
+				}
+			}
+			else {
+				if (P1->GetColliderSet().contains(P2)) {
+					P1->GetOwner()->OnComponentEndOverlap(P1, P2);
+					P2->GetOwner()->OnComponentEndOverlap(P2, P1);
+					P1->GetColliderSet().erase(P2);
+					P2->GetColliderSet().erase(P1);
+					WindowsUtility::Trace(TEXT("Collision Ended"));
+				}
+			}
+		}
+
+		/*for (Panel* p : _GUIPanels) {
+			p->Update(dtSeconds);
+		}*/
+	}
+
+	// 갱신
+	for (const std::vector<Actor*>& type : _Actors) {
+		for (Actor* actor : type) {
+			actor->Update(dtSeconds);
+		}
+	}
+}
+
+void BaseScene::Render(HDC hDC) {
+	for (const std::vector<Actor*>& type : _Actors) {
+		for (Actor* actor : type) {
+			actor->Render(hDC);
+		}
+	}
+
+	/*for (Panel* p : _GUIPanels) {
+		p->Render(hDC);
+	}*/
+}
+
 void BaseScene::CleanUp() {
 	std::for_each(_Objects.begin(), _Objects.end(), [=](ObjectInterface* Remove) {delete Remove; });
 	_Objects.clear();

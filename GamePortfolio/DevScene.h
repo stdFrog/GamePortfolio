@@ -17,6 +17,8 @@
 */
 class DevScene : public BaseScene
 {
+	using Super = BaseScene;
+
 	HWND _hWnd;
 	LONG iWidth, iHeight;
 

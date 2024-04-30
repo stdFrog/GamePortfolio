@@ -5,4 +5,5 @@
 #include "Flipbook.h"
 #include "Component.h"
 #include "Collider.h"
+#include "TileMap.h"
 #include "GameEngine.h"

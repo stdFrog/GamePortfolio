@@ -24,13 +24,6 @@ void Collider::Render(HDC hDC) {
 }
 
 BOOL Collider::CheckCollision(Collider* Other) {
-	ColliderType Type = Other->GetColliderType();
-
-	switch (Type) {
-
-	default:
-		break;
-	}
 
 	return FALSE;
 }
@@ -169,8 +162,56 @@ BOOL Collider::CollisionPointToRect(Collider* P1, Collider* P2) {
 BOOL Collider::CollisionLineToRect(Collider* P1, Collider* P2) {
 	return FALSE;
 }
-
 BOOL Collider::CollisionCircleToRect(Collider* P1, Collider* P2) {
+	BOOL bCircle = (P1->GetColliderType() == ColliderType::Circle);
+
+	CircleCollider* Circle = static_cast<CircleCollider*>(((bCircle) ? (P1) : (P2)));
+	RectCollider* Rectangle = static_cast<RectCollider*>(((bCircle) ? (P2) : (P1)));
+	
+	Vector RectPosition = Rectangle->GetOwner()->GetPosition();
+	Vector CirclePosition = Circle->GetOwner()->GetPosition();
+
+	Vector RectSize = Rectangle->GetSize();
+	float Radius = Circle->GetRadius();
+
+	RECT NormalRect = {
+		RectPosition.x - RectSize.x / 2,
+		RectPosition.y - RectSize.y / 2,
+		RectPosition.x + RectSize.x / 2,
+		RectPosition.y + RectSize.y / 2
+	};
+	
+	if ((NormalRect.left <= CirclePosition.x && NormalRect.right >= CirclePosition.x) ||
+		(NormalRect.top <= CirclePosition.y && NormalRect.bottom >= CirclePosition.y)) {
+
+		RECT ExpandRectangle = {
+			NormalRect.left - Radius,
+			NormalRect.top - Radius,
+			NormalRect.right + Radius,
+			NormalRect.bottom + Radius
+		};
+
+		if (ExpandRectangle.left < CirclePosition.x && CirclePosition.x < ExpandRectangle.right) {
+			if (ExpandRectangle.top < CirclePosition.y && CirclePosition.y < ExpandRectangle.bottom) {
+				return TRUE;
+			}
+		}
+	}
+	else {
+		if (IsPointInCircle(CirclePosition, Vector(NormalRect.left, NormalRect.top), Radius)) {
+			return TRUE;
+		}
+		if (IsPointInCircle(CirclePosition, Vector(NormalRect.left, NormalRect.bottom), Radius)) {
+			return TRUE;
+		}
+		if (IsPointInCircle(CirclePosition, Vector(NormalRect.right, NormalRect.top), Radius)) {
+			return TRUE;
+		}
+		if (IsPointInCircle(CirclePosition, Vector(NormalRect.right, NormalRect.bottom), Radius)) {
+			return TRUE;
+		}
+	}
+
 	return FALSE;
 }
 
@@ -183,5 +224,21 @@ BOOL Collider::CollisionLineToCircle(Collider* P1, Collider* P2){
 }
 
 BOOL Collider::CollisionPointToLine(Collider* P1, Collider* P2) {
+	return FALSE;
+}
+
+
+BOOL Collider::IsPointInCircle(Vector Circle, Vector RectSide, float Radius) {
+	float dx, dy, dist, R2;
+
+	dx = Circle.x - RectSide.x;
+	dy = Circle.y - RectSide.y;
+
+	dist = Vector(dx, dy).length();
+
+	if (dist < Radius) {
+		return TRUE;
+	}
+
 	return FALSE;
 }

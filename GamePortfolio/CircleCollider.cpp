@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "CircleCollider.h"
+#include "RectCollider.h"
 
 CircleCollider::CircleCollider() : Collider(ColliderType::Circle) {
 
@@ -37,7 +38,6 @@ void CircleCollider::Render(HDC hDC) {
 }
 
 BOOL CircleCollider::CheckCollision(Collider* Other) {
-
 	BOOL (*fp)(Collider*, Collider*) = Collider::Select(this, Other);
 	return (*fp)(this, Other);
 }

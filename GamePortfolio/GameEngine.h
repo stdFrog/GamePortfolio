@@ -38,6 +38,15 @@ public:
     const std::unique_ptr<BaseScene>& GetCurrentScene() const { return _MainScene; }
 
 private:
+    std::unordered_map<std::wstring, TileMap*> _TileMaps;
+
+public:
+    TileMap* GetTileMap(const std::wstring& Hash) { return _TileMaps[Hash]; }
+    TileMap* CreateTileMap(const std::wstring& Hash);
+    TileMap* LoadTileMap(const std::wstring& Hash, const std::wstring& Path);
+    void SaveTileMap(const std::wstring& Hash, const std::wstring& Path);
+
+private:
     std::filesystem::path _ResourcePath;
 
 public:
@@ -72,7 +81,6 @@ public:
     Sprite* GetSprite(const std::wstring& Hash) { return _Sprites[Hash]; }
     Sprite* CreateSprite(const std::wstring& Hash, Texture* texture, int x = 0, int y = 0, int cx = 0, int cy = 0);
 
-
 private:
     InputManager _InputManager;
 
@@ -89,16 +97,6 @@ public:
     /*void CreateLineMesh(std::wstring Name, std::wstring Path);
     LineMesh& GetLineMesh(std::wstring Name) { return *_LineMeshes.at(Name).get(); }
     const LineMesh& GetLineMesh(std::wstring Name) const { return *_LineMeshes.at(Name).get(); }*/
-
-    // TODO :
-    // Mesh, Camera, Texture, Input, GameObject, Load Resources
-   /* bool _IsInitialized = false;
-    
-
-    std::unordered_map<std::size_t, std::unique_ptr<Mesh>> _Meshes;
-    std::unordered_map<std::size_t, std::unique_ptr<Texture>> _Textures;
-    std::unordered_map<std::string, GameObject*> _BoneGameObjectPtrs;
-    */
 
 public:
     GameEngine();

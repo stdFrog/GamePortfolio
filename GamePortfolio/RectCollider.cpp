@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "RectCollider.h"
+#include "CircleCollider.h"
 #include "Actor.h"
 
 RectCollider::RectCollider() : Collider(ColliderType::Rect) {
@@ -39,5 +40,6 @@ void RectCollider::Render(HDC hDC) {
 }
 
 BOOL RectCollider::CheckCollision(Collider* Other) {
-	return FALSE;
+	BOOL(*fp)(Collider*, Collider*) = Collider::Select(this, Other);
+	return (*fp)(this, Other);
 }

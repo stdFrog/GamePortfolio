@@ -56,7 +56,7 @@ public:
 	void SetSize(Vector Size) { _Size = Size; }
 
 public:
-	Button(BaseScene* CurrentScene = NULL);
+	Button();
 	virtual ~Button();
 
 	virtual BOOL Initialize();

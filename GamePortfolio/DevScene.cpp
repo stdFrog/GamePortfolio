@@ -13,66 +13,7 @@ DevScene::DevScene() {
 }
 
 DevScene::~DevScene() {
-	CleanUp();
-}
-
-void DevScene::CleanUp() {
-	for (int i = 0; i < _Actors->size(); i++) {
-		for (int j = 0; j < _Actors[i].size(); j++) {
-			delete _Actors[i][j];
-		}
-		_Actors[i].clear();
-	}
-
-	std::for_each(_Colliders.begin(), _Colliders.end(), [=](Collider* Remove) {delete Remove; });
-	_Colliders.clear();
-
-	std::for_each(_UserInterfaces.begin(), _UserInterfaces.end(), [=](UI* Remove) {delete Remove; });
-	_UserInterfaces.clear();
-}
-
-BOOL DevScene::AppendActor(Actor* NewObject) {
-	if (NewObject == NULL) { return FALSE; }
-
-	int type = NewObject->GetLayerType();
-	for (int i = 0; i < _Actors[type].size(); i++) {
-		if (NewObject == _Actors[type][i]) { return FALSE; }
-	}
-
-	_Actors[NewObject->GetLayerType()].push_back(NewObject);
-
-	return TRUE;
-}
-
-BOOL DevScene::RemoveActor(Actor* Target) {
-	if (Target == NULL) { return FALSE; }
-
-	// vector<Actor*>& V = _Actors[Target->GetLayerType()];
-	// std::erase(std:;remove(V.begin(), V.end(), Target), V.end());
-
-	int type = Target->GetLayerType();
-	for (int i = 0; i < _Actors[type].size(); i++) {
-		if (Target == _Actors[type][i]) { delete _Actors[type][i]; return TRUE; }
-	}
-
-	return FALSE;
-}
-
-BOOL DevScene::AppendCollider(Collider* NewCollider) {
-	auto it = std::find(_Colliders.begin(), _Colliders.end(), NewCollider);
-	if (it != _Colliders.end()) { return FALSE; }
-
-	_Colliders.push_back(NewCollider);
-	return TRUE;
-}
-
-BOOL DevScene::RemoveCollider(Collider* Target) {
-	auto findIt = std::find(_Colliders.begin(), _Colliders.end(), Target);
-
-	if (findIt == _Colliders.end()) { return FALSE; }
-	_Colliders.erase(findIt);
-
-	return TRUE;
+	
 }
 
 BOOL DevScene::Initialize() {
@@ -183,10 +124,26 @@ BOOL DevScene::Initialize() {
 		Btn->Initialize();
 		_UserInterfaces.push_back(Btn);
 	}*/
-	{
+	/*{
+		Panel의 구조는 일반적이지 않다.
+		상속 및 포함 관계를 동시에 가지고 있는데 이렇게 설계할 필요가 없다.
+		
+		UI를 통합 관리하기 위한 클래스이므로 포함 관계를 유지하고, 상속은 제거한다.
+
+		엔진측에선 Panel만을 관리 대상으로 하여 컨텐츠 측에서 Panel로부터 UI를 생성해
+		관리할 수 있도록 구조를 개선한다.
+
 		UI* GUI = CreateInterface<ContentsPanel>();
 		_UserInterfaces.push_back(GUI);
-	}
+	}*/
+	/*{
+		
+			실습을 위한 임시 객체
+			Panel* GUI = CreateUIPanel<ContentsPanel>();
+			AppendUIPanel(GUI);
+
+			GUI->Initialize();
+	}*/
 
 	for (const std::vector<Actor*>& type : _Actors) {
 		for (Actor* actor : type) {
@@ -194,9 +151,9 @@ BOOL DevScene::Initialize() {
 		}
 	}
 
-	for (UI* ui : _UserInterfaces) {
+	/*for (UI* ui : _UserInterfaces) {
 		ui->Initialize();
-	}
+	}*/
 
 	/*
 		상용 게임엔진에서 등장인물을 관리하는 방법에 대해 알아보자.
@@ -359,9 +316,9 @@ void DevScene::Update(float dtSeconds) {
 			}
 		}
 
-		for (UI* ui : _UserInterfaces) {
-			ui->Update(dtSeconds);
-		}
+		/*for (Panel* p : _GUIPanels) {
+			p->Update(dtSeconds);
+		}*/
 	}
 
 	// 갱신
@@ -387,7 +344,7 @@ void DevScene::Render(HDC hDC) {
 		}
 	}
 
-	for (UI* ui : _UserInterfaces) {
-		ui->Render(hDC);
-	}
+	/*for (Panel* p : _GUIPanels) {
+		p->Render(hDC);
+	}*/
 }

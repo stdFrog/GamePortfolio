@@ -1,22 +1,20 @@
 #pragma once
 
-class BaseScene;
-
 class UI
 {
 protected:
-	BaseScene* _Owner = NULL;
+	Panel* _Owner = NULL;
 
 	Vector _Position = { 400, 300 };
 	Vector _Size = { 150, 150 };
 
 public:
-	void SetPosition(Vector Position) { _Position = Position; }
-	Vector GetPosition() { return _Position; }
+	Panel* GetOwner() { return _Owner; }
+	void SetOwner(Panel* Owner) { _Owner = Owner; }
 
 public:
-	BaseScene* GetOwner() { return _Owner; }
-	void SetOwner(BaseScene* Owner) { _Owner = Owner; }
+	void SetPosition(Vector Position) { _Position = Position; }
+	Vector GetPosition() { return _Position; }
 
 public:
 	RECT GetRect();
@@ -28,7 +26,6 @@ public:
 	virtual void Render(HDC);
 
 public:
-	UI(BaseScene* CurrentScene = NULL);
+	UI();
 	virtual ~UI();
 };
-

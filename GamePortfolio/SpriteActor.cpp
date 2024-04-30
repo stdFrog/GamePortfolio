@@ -36,7 +36,7 @@ void SpriteActor::Render(HDC hDC) {
 	WindowsUtility::GetWindowSize(GetForegroundWindow(), &Width, &Height);
 
 	// 트랜스폼 정보를 사용하지 않았을 때(SpriteActor)
-	// 프로젝트 시작부터 강의에서 800 x 600 크기로 맞춰놨기 때문에
+	// 프로젝트 시작부터 해상도를 800 x 600 크기로 맞춰놨기 때문에
 	// 뷰 포트 해상도에 맞게 하드 코딩함
 	TransparentBlt(hDC,
 		static_cast<int>(_Position.x - Size.x - (CameraPosition.x - (Width - 264) / 2)),

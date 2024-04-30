@@ -1,8 +1,9 @@
 #include "pch.h"
 #include "Panel.h"
+#include "UI.h"
 
-Panel::Panel(BaseScene* CurrentScene) : UI(CurrentScene){
-
+Panel::Panel(BaseScene* CurrentScene) : _Owner(CurrentScene){
+	
 }
 
 Panel::~Panel() {
@@ -28,8 +29,7 @@ BOOL Panel::RemoveChild(UI* Target) {
 	return TRUE;
 }
 
-BOOL Panel::Initilaize() {
-	Super::Initialize();
+BOOL Panel::Initialize() {
 	for (UI* Child : _Childs) {
 		Child->Initialize();
 	}
@@ -38,16 +38,12 @@ BOOL Panel::Initilaize() {
 }
 
 void Panel::Update(float dtSeconds) {
-	Super::Update(dtSeconds);
-
 	for (UI* Child : _Childs) {
 		Child->Update(dtSeconds);
 	}
 }
 
 void Panel::Render(HDC hDC) {
-	Super::Render(hDC);
-
 	for (UI* Child : _Childs) {
 		Child->Render(hDC);
 	}

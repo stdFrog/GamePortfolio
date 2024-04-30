@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Button.h"
 
-Button::Button(BaseScene* CurrentScene) : UI(CurrentScene){
+Button::Button() {
 
 }
 
@@ -16,13 +16,15 @@ BOOL Button::Initialize() {
 }
 
 void Button::Update(float dtSeconds) {
+	Super::Update(dtSeconds);
 	// 입력을 받을 때는 항상 Foreground 또는 Active(키보드 입력 가능)상태인지
 	// 확인하는 것이 우선이다. 실습에선 이런 내용을 다루지 않지만 항상 기억해둬야 한다.
 	
 	// 버튼을 눌렀을 때 컨텐츠 측에서 필요한 동작이 있다면 마땅히 처리해야 한다.
 	// 곧, 엔진 개발자 입장에선 이러한 처리가 가능하도록 콜백 함수를 지원해야 한다는 뜻이다.
 
-	const auto& Engine = (GameEngine*)_Owner->GetInstance();
+	const auto& Scene = dynamic_cast<DevScene*>(_Owner->GetOwner());
+	const auto& Engine = (GameEngine*)Scene->GetInstance();
 	auto& Input = Engine->GetInputManager();
 
 	if (_State == BS_CLICKED) {
@@ -57,6 +59,8 @@ void Button::Update(float dtSeconds) {
 }
 
 void Button::Render(HDC hDC) {
+	Super::Render(hDC);
+
 	if (_CurrentSprite) {
 		TransparentBlt(
 			hDC,

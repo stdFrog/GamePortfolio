@@ -10,6 +10,7 @@
 class ContentsPanel : public Panel
 {
 	using Super = Panel;
+
 	int _Count = 0;
 
 public:

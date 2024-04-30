@@ -1,7 +1,8 @@
 #include "pch.h"
 #include "UI.h"
 
-UI::UI(BaseScene* CurrentScene) : _Owner(CurrentScene){
+UI::UI(){
+
 }
 
 UI::~UI() {
@@ -13,11 +14,11 @@ BOOL UI::Initialize() {
 }
 
 void UI::Update(float dtSeconds) {
-
+	// 이미지 애니메이션 등
 }
 
 void UI::Render(HDC hDC) {
-
+	// 이미지 출력
 }
 
 RECT UI::GetRect() {
@@ -34,7 +35,8 @@ RECT UI::GetRect() {
 BOOL UI::IsMouseInRect() {
 	RECT rt = GetRect();
 
-	const auto& Engine = (GameEngine*)_Owner->GetInstance();
+	const auto& Scene = (BaseScene*)(((Panel*)_Owner)->GetOwner());
+	const auto& Engine = (GameEngine*)Scene->GetInstance();
 	auto& Input = Engine->GetInputManager();
 
 	POINT Mouse = Input.GetMousePosition();

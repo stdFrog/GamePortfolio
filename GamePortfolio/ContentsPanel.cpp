@@ -17,37 +17,44 @@ ContentsPanel::ContentsPanel(BaseScene* CurrentScene) : Panel(CurrentScene) {
 
 		이 클래스를 보면 리소스 매니저의 장점을 알 수 있다.
 	*/
-	const auto& Scene = dynamic_cast<DevScene*>(_Owner);
+	const auto& Scene = dynamic_cast<BaseScene*>(_Owner);
 	const auto& Engine = (GameEngine*)Scene->GetInstance();
 
+	/*
+		임시 클래스이므로 생성 및 삭제 함수는 따로 만들지 않는다.
+	*/
 	{
-		Button* NewInterface = Scene->CreateInterface<Button>();
+		Button* NewInterface = new Button();
 		NewInterface->SetPosition(Vector(400, 200));
 		NewInterface->SetSize(Vector(650, 300));
+		NewInterface->SetOwner(this);
 		AddChild(NewInterface);
 	}
 	{
-		Button* NewInterface = Scene->CreateInterface<Button>();
+		Button* NewInterface = new Button();
 		NewInterface->SetSprite(Engine->GetSprite(L"Start_Off"), BS_DEFAULT);
 		NewInterface->SetSprite(Engine->GetSprite(L"Start_On"), BS_CLICKED);
+		NewInterface->SetOwner(this);
 		NewInterface->SetPosition(Vector(200, 200));
 
 		NewInterface->AddOnClickDelegate(this, &ContentsPanel::OnClickStartButton);
 		AddChild(NewInterface);
 	}
 	{
-		Button* NewInterface = Scene->CreateInterface<Button>();
+		Button* NewInterface = new Button();
 		NewInterface->SetSprite(Engine->GetSprite(L"Edit_Off"), BS_DEFAULT);
 		NewInterface->SetSprite(Engine->GetSprite(L"Edit_On"), BS_CLICKED);
+		NewInterface->SetOwner(this);
 		NewInterface->SetPosition(Vector(400, 200));
 
 		NewInterface->AddOnClickDelegate(this, &ContentsPanel::OnClickEditButton);
 		AddChild(NewInterface);
 	}
 	{
-		Button* NewInterface = Scene->CreateInterface<Button>();
+		Button* NewInterface = new Button();
 		NewInterface->SetSprite(Engine->GetSprite(L"Exit_Off"), BS_DEFAULT);
 		NewInterface->SetSprite(Engine->GetSprite(L"Exit_On"), BS_CLICKED);
+		NewInterface->SetOwner(this);
 		NewInterface->SetPosition(Vector(600, 200));
 
 		NewInterface->AddOnClickDelegate(this, &ContentsPanel::OnClickExitButton);
@@ -60,15 +67,15 @@ ContentsPanel::~ContentsPanel() {
 }
 
 void ContentsPanel::OnClickStartButton() {
-	_Count++;
+	
 }
 
 void ContentsPanel::OnClickEditButton() {
-	_Count--;
+
 }
 
 void ContentsPanel::OnClickExitButton() {
-	_Count = 0;
+	
 }
 
 BOOL ContentsPanel::Initilaize() {

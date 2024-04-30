@@ -19,7 +19,7 @@ public:
 	virtual void Render(HDC);
 
 public:
-	ContentsButton(BaseScene* CurrentScene = NULL);
+	ContentsButton();
 	virtual ~ContentsButton();
 };
 

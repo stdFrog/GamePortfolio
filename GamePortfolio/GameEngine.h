@@ -3,6 +3,7 @@
 class Texture;
 class Sprite;
 class Flipbook;
+//class Sound;
 
 class GameEngine
 {
@@ -36,6 +37,15 @@ public:
 public:
     std::unique_ptr<BaseScene>& GetCurrentScene() { return _MainScene; }
     const std::unique_ptr<BaseScene>& GetCurrentScene() const { return _MainScene; }
+
+/*
+private:
+    std::unordered_map<std::wstring, Sound*> _Sounds;
+
+public:
+    Sound* GetSound(const std::wstring& Hash) { return _Sounds[Hash]; }
+    Sound* LoadSound(const std::wstring& Hash, const std::wstring& Path);
+*/
 
 private:
     std::unordered_map<std::wstring, TileMap*> _TileMaps;

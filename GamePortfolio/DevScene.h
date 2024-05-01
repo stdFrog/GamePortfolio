@@ -26,6 +26,8 @@ public:
 	DevScene();
 	virtual ~DevScene();
 
+	class TileMapActor* _TileMapActor;
+
 public:
 	virtual BOOL Initialize();
 	virtual void Update(float);

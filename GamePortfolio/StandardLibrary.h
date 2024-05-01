@@ -15,6 +15,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include <assert.h>
 #pragma comment(lib, "MsImg32")
 
 /*

@@ -31,8 +31,11 @@ BOOL DevScene::Initialize() {
 	Engine->LoadTexture(L"Start", L"Sprite\\UI\\Start.bmp");
 	Engine->LoadTexture(L"Edit", L"Sprite\\UI\\Edit.bmp");
 	Engine->LoadTexture(L"Exit", L"Sprite\\UI\\Exit.bmp");
+	Engine->LoadTexture(L"Tile", L"Sprite\\Map\\Tile.bmp", RGB(128, 128, 128));
 
 	Engine->CreateSprite(L"Stage01", Engine->GetTexture(L"Stage01"));
+	Engine->CreateSprite(L"Tile_O", Engine->GetTexture(L"Tile"), 0, 0, 48,48);
+	Engine->CreateSprite(L"Tile_X", Engine->GetTexture(L"Tile"), 48, 0, 48, 48);
 	Engine->CreateSprite(L"Start_Off", Engine->GetTexture(L"Start"), 0, 0, 150, 150);
 	Engine->CreateSprite(L"Start_On", Engine->GetTexture(L"Start"), 150, 0, 150, 150);
 	Engine->CreateSprite(L"Edit_Off", Engine->GetTexture(L"Edit"), 0, 0, 150, 150);
@@ -100,7 +103,7 @@ BOOL DevScene::Initialize() {
 	}
 
 	{
-		Actor* CollisionTestCircle = CreateActor<Actor>();
+		/*Actor* CollisionTestCircle = CreateActor<Actor>();
 		{
 			CircleCollider* collider = new CircleCollider;
 			collider->SetRadius(50.f);
@@ -119,7 +122,7 @@ BOOL DevScene::Initialize() {
 		}
 
 		AppendActor(CollisionTestRect);
-		AppendActor(CollisionTestCircle);
+		AppendActor(CollisionTestCircle);*/
 	}
 
 	/*{
@@ -171,6 +174,52 @@ BOOL DevScene::Initialize() {
 		ui->Initialize();
 	}*/
 	
+	{
+		/*
+			타일맵의 경우 충돌 처리 등의 용도로도 쓰이므로 빠른 검색이 가능해야 한다.
+			씬에 임시 포인터를 두고 디버깅용으로 사용한다.
+		*/
+		TileMapActor* NewTileMapActor = CreateActor<TileMapActor>();
+		AppendActor(NewTileMapActor);
+		_TileMapActor = NewTileMapActor;
+		{
+			auto* M = Engine->CreateTileMap(L"TileMap_01");
+			M->SetMapSize(Vector(63, 43));
+			M->SetTileSize(48);
+
+			_TileMapActor->SetTileMap(M);
+			_TileMapActor->SetVisible(TRUE);
+		}
+	}
+
+	/*
+		현재는 실습을 간단히 하기 위해 소리와 관련된 기능을 검색하여 끌어다 쓴다.
+		추후 FMOD라는 유명 라이브러리를 이용하여 음악이나, 효과음 등을 좀 더 편리하고
+		쉽게 실행할 수 있으므로 자세한 분석은 필요없다고 한다.
+
+		현재에 와서, Wave를 이용해 간단한 음악 재생기를 만든다거나 실무에서 Wave 파일을 직접 사용하는 등의 일은 극히 드물다.
+		이유는 간단한데, Wave가 비압축 포맷이기 때문에 상대적으로 파일의 크기도 크고 사용 방법도 꽤나 연구해봐야 하기 때문이다.
+		
+		따라서, 게임을 만들 때에는 이미 제공되는 고수준의 라이브러리를 이용한다.
+
+		사실, Wave 파일은 연구해볼만한 가치가 충분하다.
+
+		Wave는 마이크로소프트와 IBM이 공식적으로 지원하는 포맷이며, 어느 운영체제에서건 실행될 수 있다는 장점이 있다.
+		또, 현재 사용되는 오디오 파일 대부분이 Wave 파일로부터 파생되어 유사한 형식을 갖고 있다고 한다.
+
+		때문에, 적어도 한 번은 연구해봐야 한다.
+		
+		오디오 파일의 포맷은 어떠한지, 소리를 만들어 파일로 저장하는 방법이 무엇인지,
+		드라이버가 출력 장치에게 보내는 신호가 무엇인지 등의 세부적인 동작을 들여다 볼 수 있는 기회가 될 것이다. 
+
+		LoadSound(L"BGM", L"Sound\\BGM.wav");
+		{
+			Sound* NewSound = GetSound(L"BGM");
+			NewSound->Play(true);
+
+		}
+	*/
+
 	Super::Initialize();
 
 	/*
@@ -306,6 +355,15 @@ BOOL DevScene::Initialize() {
 void DevScene::Update(float dtSeconds) {
 	Super::Update(dtSeconds);
 
+	const auto& Engine = (GameEngine*)GetInstance();
+	auto& Input = Engine->GetInputManager();
+
+	if(Input.IsPressed(InputButton::Q)) {
+		Engine->SaveTileMap(L"TileMap_01", L"Tilemap\\Tilemap01.txt");
+	}
+	if (Input.IsPressed(InputButton::E)) {
+		Engine->LoadTileMap(L"TileMap_01", L"Tilemap\\Tilemap01.txt");
+	}
 }
 
 void DevScene::Render(HDC hDC) {

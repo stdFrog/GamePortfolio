@@ -1,8 +1,11 @@
 #pragma once
 #include "ResourceBase.h"
 
+typedef enum {EMPTY, WALL} TILETYPE;
+typedef enum {TILE_WIDTH = 63, TILE_HEIGHT = 43, TILE_SIZEX = 48, TILE_SIZEY = 48} TILESIZE;
+
 struct Tile {
-	int sz;
+	int Number;
 };
 
 class TileMap : public ResourceBase

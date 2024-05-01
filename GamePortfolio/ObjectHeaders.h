@@ -4,6 +4,7 @@
 #include "Actor.h"
 #include "SpriteActor.h"
 #include "FlipbookActor.h"
+#include "TileMapActor.h"
 
 #include "Monster.h"
 #include "Missile.h"

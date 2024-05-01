@@ -168,9 +168,6 @@ namespace WindowsUtility
 		return TRUE;
 	}
 
-	// Read(TEXT("DrawList.txt"), TEXT("%d"), &Count);
-	// Read(TEXT("DrawList.txt"), TEXT("(%d,%d)->(%d,%d)"), &pt1.x, &pt1.y, &pt2.x, &pt2.y);
-
 	static TCHAR* strchr(const TCHAR* String, const TCHAR Char) {
 		while (*String) {
 			if (*String == Char) { return (TCHAR*)String; }
@@ -235,6 +232,9 @@ namespace WindowsUtility
 
 		return ret;
 	}
+
+	// Read(TEXT("DrawList.txt"), TEXT("%d"), &Count);
+	// Read(TEXT("DrawList.txt"), TEXT("(%d,%d)->(%d,%d)"), &pt1.x, &pt1.y, &pt2.x, &pt2.y);
 
 	static void Read(MapView* Target, const TCHAR* format, ...) {
 		if (Target == NULL) { return; }

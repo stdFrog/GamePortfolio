@@ -32,6 +32,15 @@ GameEngine::~GameEngine() {
     }
 
     _TileMaps.clear();
+
+    /*
+    for (auto& N : _Sounds) {
+        delete N.second;
+        N.second = NULL;
+    }
+
+    _Sounds.clear();
+    */
 }
 
 /*
@@ -52,11 +61,24 @@ TileMap* GameEngine::CreateTileMap(const std::wstring& Hash) {
 }
 
 TileMap* GameEngine::LoadTileMap(const std::wstring& Hash, const std::wstring& Path) {
-    return NULL;
+    TileMap* M = NULL;
+    if (_TileMaps.find(Hash) == _TileMaps.end()) {
+        _TileMaps[Hash] = new TileMap();
+    }
+
+    M = _TileMaps[Hash];
+
+    std::filesystem::path AbsPath = _ResourcePath / Path;
+    M->LoadFile(AbsPath);
+
+    return M;
 }
 
 void GameEngine::SaveTileMap(const std::wstring& Hash, const std::wstring& Path) {
+    TileMap* M = GetTileMap(Hash);
 
+    std::filesystem::path AbsPath = _ResourcePath / Path;
+    M->SaveFile(AbsPath);
 }
 
 Texture* GameEngine::LoadTexture(const std::wstring& Hash, const std::wstring& Path, int Transparent) {
@@ -133,6 +155,10 @@ BOOL GameEngine::Initialize(HWND hWnd /*, std::filepath::path ResourcePath*/) {
         _bSceneReady = ChangeScene(SceneType::DevScene);
     }
 
+    /*
+        SondManager->GetInstance()->Init(hWnd);
+    */
+
     _bAllInitialized = (_bSceneReady && _bInputInitialized && _bResourceReady);
     return _bAllInitialized;
 }
@@ -175,3 +201,19 @@ BOOL GameEngine::ChangeScene(SceneType NewSceneType) {
 
     return _MainScene->Initialize();
 }
+
+/*
+    Sound* GameEngine::LoadSound(const std::wstring& Hash, const std::wstring& Path){
+        if(_Sounds.find(Hash) != _Sounds.end()){
+            return _Sounds[Hash];
+        }
+
+        std::filesystem::path AbsPath = _ResourcePath / Path;
+        
+        Sound* NewSound = new Sound();
+        NewSound->LoadWave(AbsPath);
+        _Sounds[Hash] = NewSound;
+
+        return NewSound;
+    }
+*/

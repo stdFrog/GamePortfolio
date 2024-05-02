@@ -93,8 +93,10 @@ BOOL DevScene::Initialize() {
 		*/
 		Player* player = CreateActor<Player>();
 		{
-			CircleCollider* collider = new CircleCollider;
-			collider->SetRadius(50.f);
+			// CircleCollider* collider = new CircleCollider;
+			RectCollider* collider = new RectCollider;
+			//collider->SetRadius(50.f);
+			collider->SetSize(Vector(50.f, 50.f));
 			AppendCollider(collider);
 			player->AppendComponent(collider);
 		}
@@ -103,7 +105,24 @@ BOOL DevScene::Initialize() {
 	}
 
 	{
-		/*Actor* CollisionTestCircle = CreateActor<Actor>();
+		/*
+			Player는 등장 요소이므로 컨텐츠에서 관리한다.
+			
+			즉, 엔진측에서 다룰 수 있는 지형/지물에서 충돌 처리를 하는 것이 일반적이다.
+			때문에 실습과 달리 Collider에 관리 함수를 추가하기로 한다.
+		*/
+		Actor* CollisionTestRect = CreateActor<Actor>();
+		{
+			RectCollider* collider = new RectCollider();
+			collider->SetSize(Vector(100.f, 100.f));
+			CollisionTestRect->AppendComponent(collider);
+			AppendCollider(collider);
+			CollisionTestRect->SetPosition(Vector(400, 400));
+		}
+
+		AppendActor(CollisionTestRect);
+
+		Actor* CollisionTestCircle = CreateActor<Actor>();
 		{
 			CircleCollider* collider = new CircleCollider;
 			collider->SetRadius(50.f);
@@ -112,17 +131,7 @@ BOOL DevScene::Initialize() {
 			CollisionTestCircle->SetPosition(Vector(400, 200));
 		}
 		
-		Actor* CollisionTestRect = CreateActor<Actor>();
-		{
-			RectCollider* collider = new RectCollider();
-			collider->SetSize(Vector(50.f, 50.f));
-			CollisionTestRect->AppendComponent(collider);
-			AppendCollider(collider);
-			CollisionTestRect->SetPosition(Vector(400, 400));
-		}
-
-		AppendActor(CollisionTestRect);
-		AppendActor(CollisionTestCircle);*/
+		AppendActor(CollisionTestCircle);
 	}
 
 	/*{
@@ -179,6 +188,7 @@ BOOL DevScene::Initialize() {
 			타일맵의 경우 충돌 처리 등의 용도로도 쓰이므로 빠른 검색이 가능해야 한다.
 			씬에 임시 포인터를 두고 디버깅용으로 사용한다.
 		*/
+		/*
 		TileMapActor* NewTileMapActor = CreateActor<TileMapActor>();
 		AppendActor(NewTileMapActor);
 		_TileMapActor = NewTileMapActor;
@@ -190,6 +200,7 @@ BOOL DevScene::Initialize() {
 			_TileMapActor->SetTileMap(M);
 			_TileMapActor->SetVisible(TRUE);
 		}
+		*/
 	}
 
 	/*
@@ -369,4 +380,11 @@ void DevScene::Update(float dtSeconds) {
 void DevScene::Render(HDC hDC) {
 	Super::Render(hDC);
 
+	const auto& Engine = (GameEngine*)GetInstance();
+	auto& Input = Engine->GetInputManager();
+
+	POINT Mouse = Input.GetMousePosition();
+	TCHAR str[256];
+	wsprintf(str, TEXT("Mouse = (%d, %d)"), Mouse.x, Mouse.y);
+	_TEXTOUT(hDC, 800, 0, str);
 }

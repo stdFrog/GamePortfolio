@@ -38,6 +38,7 @@ void CircleCollider::Render(HDC hDC) {
 }
 
 BOOL CircleCollider::CheckCollision(Collider* Other) {
-	BOOL (*fp)(Collider*, Collider*) = Collider::Select(this, Other);
-	return (*fp)(this, Other);
+	BOOL(*fp)(Collider*, Collider*) = Collider::Select(this, Other);
+	BOOL(*pfn)(Collider*, Collider*) = Collider::PushOutCollider(this, Other);
+	return (*fp)(this, Other) && (*pfn)(this, Other);
 }

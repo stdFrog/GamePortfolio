@@ -56,6 +56,11 @@ public:
 	static BOOL IsPointInCircle(Vector, Vector, float);
 
 public:
+	static BOOL(*PushOutCollider(Collider* P1, Collider* P2))(Collider*, Collider*);
+	static BOOL PushOutCircleToCircle(Collider*, Collider*);
+	static BOOL PushOutRectToRect(Collider*, Collider*);
+
+public:
 	virtual BOOL Initialize();
 	virtual void Update(float);
 	virtual void Render(HDC);

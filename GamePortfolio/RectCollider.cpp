@@ -41,5 +41,7 @@ void RectCollider::Render(HDC hDC) {
 
 BOOL RectCollider::CheckCollision(Collider* Other) {
 	BOOL(*fp)(Collider*, Collider*) = Collider::Select(this, Other);
-	return (*fp)(this, Other);
+	BOOL(*pfn)(Collider*, Collider*) = Collider::PushOutCollider(this, Other);
+
+	return (*fp)(this, Other) && (*pfn)(this, Other);
 }

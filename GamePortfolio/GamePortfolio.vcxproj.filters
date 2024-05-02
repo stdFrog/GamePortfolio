@@ -224,12 +224,6 @@
     <ClInclude Include="TileMapActor.h">
       <Filter>소스 파일\07.Object\GameObject\Unreal</Filter>
     </ClInclude>
-    <ClInclude Include="Sound.h">
-      <Filter>소스 파일\04.GameEngine\04-1.Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="SoundManager.h">
-      <Filter>소스 파일\04.GameEngine\04-1.Resources</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GamePortfolio.cpp">
@@ -363,12 +357,6 @@
     </ClCompile>
     <ClCompile Include="TileMapActor.cpp">
       <Filter>소스 파일\07.Object\GameObject\Unreal</Filter>
-    </ClCompile>
-    <ClCompile Include="Sound.cpp">
-      <Filter>소스 파일\04.GameEngine\04-1.Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="SoundManager.cpp">
-      <Filter>소스 파일\04.GameEngine\04-1.Resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

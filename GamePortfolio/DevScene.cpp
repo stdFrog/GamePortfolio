@@ -117,10 +117,10 @@ BOOL DevScene::Initialize() {
 		{
 			RectCollider* collider = new RectCollider();
 			collider->SetSize(Vector(100.f, 100.f));
-			collider->SetCollisionLayer(CLT_WALL);
+			collider->SetCollisionLayer(CLT_GROUND);
 			CollisionTestRect->AppendComponent(collider);
 			AppendCollider(collider);
-			CollisionTestRect->SetPosition(Vector(400, 400));
+			CollisionTestRect->SetPosition(Vector(400, 200));
 		}
 
 		AppendActor(CollisionTestRect);
@@ -132,21 +132,20 @@ BOOL DevScene::Initialize() {
 			collider->SetCollisionLayer(CLT_WALL);
 			CollisionTestCircle->AppendComponent(collider);
 			AppendCollider(collider);
-			CollisionTestCircle->SetPosition(Vector(400, 200));
+			CollisionTestCircle->SetPosition(Vector(400, 400));
 		}
 		
 		AppendActor(CollisionTestCircle);
 
 		Actor* CollisionTest = CreateActor<Actor>();
 		CollisionTest->SetLayerType(LAYER_OBJECT);
-		CollisionTest->SetPosition(Vector(200, 400));
 		{
 			RectCollider* collider = new RectCollider();
-			collider->SetSize(Vector(1000.f, 400.f));
+			collider->SetSize(Vector(10000.f, 200.f));
 			collider->SetCollisionLayer(CLT_GROUND);
-			CollisionTestCircle->AppendComponent(collider);
+			CollisionTest->AppendComponent(collider);
 			AppendCollider(collider);
-			CollisionTestCircle->SetPosition(Vector(400, 200));
+			CollisionTest->SetPosition(Vector(0,400));
 		}
 
 		AppendActor(CollisionTestCircle);

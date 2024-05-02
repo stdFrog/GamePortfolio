@@ -40,6 +40,7 @@ void RectCollider::Render(HDC hDC) {
 }
 
 BOOL RectCollider::CheckCollision(Collider* Other) {
+	if (Super::CheckCollision(Other) == FALSE) { return FALSE; }
 	BOOL(*fp)(Collider*, Collider*) = Collider::Select(this, Other);
 	BOOL(*pfn)(Collider*, Collider*) = Collider::PushOutCollider(this, Other);
 

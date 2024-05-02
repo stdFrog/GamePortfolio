@@ -21,11 +21,26 @@ enum class ColliderType {
 */
 class Collider : public Component
 {
+	std::vector<COLLISION_LAYER_TYPE> V;
 	std::unordered_set<Collider*> _ColliderSet;
+	COLLISION_LAYER_TYPE _CollisionLayer = CLT_OBJECT;
+	UINT _CollisionFlag = 0xFFFFFFFF;
 
 protected:
 	ColliderType _Type;
 	BOOL _bVisible = TRUE;
+
+public:
+	void ResetCollisionFlag() { _CollisionFlag = 0; }
+	void SetCollisionFlagLayer(COLLISION_LAYER_TYPE);
+
+public:
+	void SetCollisionLayer(COLLISION_LAYER_TYPE Layer) { _CollisionLayer = Layer; }
+	COLLISION_LAYER_TYPE GetCollisionLayerType() { return _CollisionLayer; }
+
+public:
+	void SetCollisionFlag(UINT Flag) { _CollisionFlag = Flag; }
+	UINT GetCollisionFlag() { return _CollisionFlag; }
 
 public:
 	std::unordered_set<Collider*>& GetColliderSet() { return _ColliderSet; }

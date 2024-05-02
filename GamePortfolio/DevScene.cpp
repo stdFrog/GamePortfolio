@@ -98,6 +98,8 @@ BOOL DevScene::Initialize() {
 			//collider->SetRadius(50.f);
 			collider->SetSize(Vector(50.f, 50.f));
 			AppendCollider(collider);
+			collider->SetCollisionLayer(CLT_OBJECT);
+			collider->SetCollisionFlagLayer((COLLISION_LAYER_TYPE)(CLT_WALL | CLT_OBJECT));
 			player->AppendComponent(collider);
 		}
 
@@ -115,6 +117,7 @@ BOOL DevScene::Initialize() {
 		{
 			RectCollider* collider = new RectCollider();
 			collider->SetSize(Vector(100.f, 100.f));
+			collider->SetCollisionLayer(CLT_WALL);
 			CollisionTestRect->AppendComponent(collider);
 			AppendCollider(collider);
 			CollisionTestRect->SetPosition(Vector(400, 400));
@@ -124,13 +127,28 @@ BOOL DevScene::Initialize() {
 
 		Actor* CollisionTestCircle = CreateActor<Actor>();
 		{
-			CircleCollider* collider = new CircleCollider;
+			CircleCollider* collider = new CircleCollider();
 			collider->SetRadius(50.f);
+			collider->SetCollisionLayer(CLT_WALL);
 			CollisionTestCircle->AppendComponent(collider);
 			AppendCollider(collider);
 			CollisionTestCircle->SetPosition(Vector(400, 200));
 		}
 		
+		AppendActor(CollisionTestCircle);
+
+		Actor* CollisionTest = CreateActor<Actor>();
+		CollisionTest->SetLayerType(LAYER_OBJECT);
+		CollisionTest->SetPosition(Vector(200, 400));
+		{
+			RectCollider* collider = new RectCollider();
+			collider->SetSize(Vector(1000.f, 400.f));
+			collider->SetCollisionLayer(CLT_GROUND);
+			CollisionTestCircle->AppendComponent(collider);
+			AppendCollider(collider);
+			CollisionTestCircle->SetPosition(Vector(400, 200));
+		}
+
 		AppendActor(CollisionTestCircle);
 	}
 

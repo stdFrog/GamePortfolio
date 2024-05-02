@@ -3,6 +3,9 @@
 #include "Flipbook.h"
 #include "CameraComponent.h"
 
+BOOL bOnGround;
+Vector S(200.f,200.f), G(1000.f, 1000.f);
+
 Player::Player() : FlipbookActor(ObjectType::Player) {
 
 }
@@ -36,39 +39,52 @@ void Player::Update(float dtSeconds) {
 	const auto& Scene = dynamic_cast<DevScene*>(_Scene);
 	const auto& Engine = (GameEngine*)(Scene->GetInstance());
 	auto& Input = Engine->GetInputManager();
-
-	float Speed = 200.f;
+	
 	/* 
 		단순히 벡터만을 사용할 때 다음과 같이 입력을 받아 이동 시킬 수 있다.
 
 		이 경우엔 카메라의 위치도 직접 변경해야 하는데, 대부분 컴포넌트를 만들어 이어 붙이는 편이다. 
 	*/
-	if (Input.IsPressed(InputButton::W)) {
-		_Position.y -= Speed * dtSeconds;
+
+	if (!bOnGround) {
+		S.y += G.y * dtSeconds;
+		_Position.y += S.y * dtSeconds;
+	}
+	else {
+		S = Vector(200.f, 200.f);
+	}
+	
+	/*if (Input.IsPressed(InputButton::W)) {
+		_Position.y -= S.y * dtSeconds;
 		SetFlipbook(_FlipbookUp);
 	}
 	else if (Input.IsPressed(InputButton::S)) {
-		_Position.y += Speed * dtSeconds;
+		_Position.y += S.y * dtSeconds;
 		SetFlipbook(_FlipbookDown);
-	}
-	else if (Input.IsPressed(InputButton::A)) {
-		_Position.x -= Speed * dtSeconds;
+	} */
+	if (Input.IsPressed(InputButton::A)) {
+		_Position.x -= S.x * dtSeconds;
 		SetFlipbook(_FlipbookLeft);
 	}
 	else if (Input.IsPressed(InputButton::D)) {
-		_Position.x += Speed * dtSeconds;
+		_Position.x += S.x * dtSeconds;
 		SetFlipbook(_FlipbookRight);
 	}
-	
+
+	if (Input.IsPressed(InputButton::SpaceBar) && bOnGround) {
+		bOnGround = FALSE;
+		S.y = -500.f;
+	}
 	/*
 		행렬과 트랜스폼 정보를 이용할 때
-		BOOL Up, Down, Left, Right;
+		BOOL Up, Down, Left, Right, Space;
 		Up = Input.IsPressed(InputButton::W);
 		Down = Input.IsPressed(InputButton::S);
 		Left = Input.IsPressed(InputButton::A);
 		Right = Input.IsPressed(InputButton::D);
+		Space = Input.IsPressed(InputButton::SpaceBar);
 
-		float XAxis = 0.f, YAxis = 0.f;
+		float XAxis = 0.f, YAxis = 1.f; // 0.f;
 
 		if (Up ^ Down) {
 			YAxis = ((Up) ? (SetFlipbook(_FlipbookUp), -1.f) : (SetFlipbook(_FlipbookDown), 1.f));
@@ -98,9 +114,9 @@ void Player::Render(HDC hDC) {
 }
 
 void Player::OnComponentBeginOverlap(Collider* I, Collider* Target) {
-
+	bOnGround = TRUE;
 }
 
 void Player::OnComponentEndOverlap(Collider* I, Collider* Target) {
-
+	bOnGround = FALSE;
 }

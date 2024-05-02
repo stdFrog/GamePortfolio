@@ -25,6 +25,11 @@ void Collider::Render(HDC hDC) {
 
 BOOL Collider::CheckCollision(Collider* Other) {
 
+	UINT Layer = Other->GetCollisionLayerType();
+	if (_CollisionFlag & 1 << Layer) {
+		return TRUE;
+	}
+
 	return FALSE;
 }
 
@@ -413,18 +418,39 @@ BOOL Collider::PushOutRectToRect(Collider* P1, Collider* P2) {
 		
 		LONG Offset = ((iWidth <= iHeight) ? (iWidth) : (iHeight));
 		if (bTrue) {
-			OffsetRect(&Rectangle1, XAxis * Offset, YAxis * Offset);
+			if (iWidth < iHeight) {
+				OffsetRect(&Rectangle1, XAxis * Offset, 0);
+				Result = Vector(Position1.x + XAxis * Offset, Position1.y);
+			}
+			else {
+				OffsetRect(&Rectangle1, 0, YAxis * Offset);
+				Result = Vector(Position1.x, Position1.y + YAxis * Offset);
+			}
+			// 위와 같이 하거나 닿는 면의 길이를 비교하여 미끄러지지 않게 만들 수 있다
+			// OffsetRect(&Rectangle1, XAxis * Offset, YAxis * Offset);
 			// Result = Vector(Rectangle1.left + RectSize1.x, Rectangle1.top + RectSize1.y);
-			Result = Vector(Position1.x + XAxis * Offset, Position1.y + YAxis * Offset);
+			// Result = Vector(Position1.x + XAxis * Offset, Position1.y + YAxis * Offset);
 			P1->GetOwner()->SetPosition(Result);
 		}
 		else {
-			OffsetRect(&Rectangle2, XAxis * Offset, YAxis * Offset);
+			if (iWidth < iHeight) {
+				OffsetRect(&Rectangle1, XAxis * Offset, 0);
+				Result = Vector(Position1.x + XAxis * Offset, Position1.y);
+			}
+			else {
+				OffsetRect(&Rectangle1, 0, YAxis * Offset);
+				Result = Vector(Position1.x, Position1.y + YAxis * Offset);
+			}
+			// OffsetRect(&Rectangle2, XAxis * Offset, YAxis * Offset);
 			// Result = Vector(Rectangle2.left + RectSize2.x, Rectangle2.top + RectSize2.y);
-			Result = Vector(Position2.x + XAxis * Offset, Position2.y + YAxis * Offset);
+			// Result = Vector(Position2.x + XAxis * Offset, Position2.y + YAxis * Offset);
 			P2->GetOwner()->SetPosition(Result);
 		}
 	}
 
 	return TRUE;
+}
+
+void Collider::SetCollisionFlagLayer(COLLISION_LAYER_TYPE Layer) {
+	_CollisionFlag = Layer;
 }

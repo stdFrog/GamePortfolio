@@ -43,10 +43,36 @@ BOOL DevScene::Initialize() {
 	Engine->CreateSprite(L"Exit_Off", Engine->GetTexture(L"Exit"), 0, 0, 150, 150);
 	Engine->CreateSprite(L"Exit_On", Engine->GetTexture(L"Exit"), 150, 0, 150, 150);
 
+	/* IDLE */
+	{
+		Texture* T = Engine->GetTexture(L"PlayerUp");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_IdleUp");
+		F->SetInfo({ T, L"FB_IdleUp", Vector(200, 200), 0, 9, 0, 0.5f});
+	}
+
+	{
+		Texture* T = Engine->GetTexture(L"PlayerDown");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_IdleDown");
+		F->SetInfo({ T, L"FB_IdleDown", Vector(200, 200), 0, 9, 0, 0.5f });
+	}
+
+	{
+		Texture* T = Engine->GetTexture(L"PlayerLeft");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_IdleLeft");
+		F->SetInfo({ T, L"FB_IdleLeft", Vector(200, 200), 0, 9, 0, 0.5f });
+	}
+
+	{
+		Texture* T = Engine->GetTexture(L"PlayerRight");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_IdleRight");
+		F->SetInfo({ T, L"FB_IdleRight", Vector(200, 200), 0, 9, 0, 0.5f });
+	}
+
+	/* MOVE */
 	{
 		Texture* T = Engine->GetTexture(L"PlayerUp");
 		Flipbook* F = Engine->CreateFlipbook(L"FB_MoveUp");
-		F->SetInfo({ T, L"FB_MoveUp", Vector(200, 200), 0, 9, 1, 0.5f});
+		F->SetInfo({ T, L"FB_MoveUp", Vector(200, 200), 0, 9, 1, 0.5f });
 	}
 
 	{
@@ -65,6 +91,31 @@ BOOL DevScene::Initialize() {
 		Texture* T = Engine->GetTexture(L"PlayerRight");
 		Flipbook* F = Engine->CreateFlipbook(L"FB_MoveRight");
 		F->SetInfo({ T, L"FB_MoveRight", Vector(200, 200), 0, 9, 1, 0.5f });
+	}
+
+	/* Attack */
+	{
+		Texture* T = Engine->GetTexture(L"PlayerUp");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_AttackUp");
+		F->SetInfo({ T, L"FB_AttackUp", Vector(200, 200), 0, 7, 3, 0.5f });
+	}
+
+	{
+		Texture* T = Engine->GetTexture(L"PlayerDown");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_AttackDown");
+		F->SetInfo({ T, L"FB_AttackDown", Vector(200, 200), 0, 7, 3, 0.5f });
+	}
+
+	{
+		Texture* T = Engine->GetTexture(L"PlayerLeft");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_AttackLeft");
+		F->SetInfo({ T, L"FB_AttackLeft", Vector(200, 200), 0, 7, 3, 0.5f });
+	}
+
+	{
+		Texture* T = Engine->GetTexture(L"PlayerRight");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_AttackRight");
+		F->SetInfo({ T, L"FB_AttackRight", Vector(200, 200), 0, 7, 3, 0.5f });
 	}
 
 	{
@@ -113,6 +164,7 @@ BOOL DevScene::Initialize() {
 			즉, 엔진측에서 다룰 수 있는 지형/지물에서 충돌 처리를 하는 것이 일반적이다.
 			때문에 실습과 달리 Collider에 관리 함수를 추가하기로 한다.
 		*/
+		/*
 		Actor* CollisionTestRect = CreateActor<Actor>();
 		{
 			RectCollider* collider = new RectCollider();
@@ -149,6 +201,7 @@ BOOL DevScene::Initialize() {
 		}
 
 		AppendActor(CollisionTestCircle);
+		*/
 	}
 
 	/*{
@@ -205,7 +258,6 @@ BOOL DevScene::Initialize() {
 			타일맵의 경우 충돌 처리 등의 용도로도 쓰이므로 빠른 검색이 가능해야 한다.
 			씬에 임시 포인터를 두고 디버깅용으로 사용한다.
 		*/
-		/*
 		TileMapActor* NewTileMapActor = CreateActor<TileMapActor>();
 		AppendActor(NewTileMapActor);
 		_TileMapActor = NewTileMapActor;
@@ -214,10 +266,11 @@ BOOL DevScene::Initialize() {
 			M->SetMapSize(Vector(63, 43));
 			M->SetTileSize(48);
 
+			Engine->LoadTileMap(L"TileMap_01", L"Tilemap\\Tilemap01_RESTORE.txt");
 			_TileMapActor->SetTileMap(M);
-			_TileMapActor->SetVisible(TRUE);
+			// _TileMapActor->SetVisible(TRUE);
+			_TileMapActor->SetVisible(FALSE);
 		}
-		*/
 	}
 
 	/*
@@ -386,12 +439,12 @@ void DevScene::Update(float dtSeconds) {
 	const auto& Engine = (GameEngine*)GetInstance();
 	auto& Input = Engine->GetInputManager();
 
-	if(Input.IsPressed(InputButton::Q)) {
+	/*if(Input.IsPressed(InputButton::Q)) {
 		Engine->SaveTileMap(L"TileMap_01", L"Tilemap\\Tilemap01.txt");
 	}
 	if (Input.IsPressed(InputButton::E)) {
 		Engine->LoadTileMap(L"TileMap_01", L"Tilemap\\Tilemap01.txt");
-	}
+	}*/
 }
 
 void DevScene::Render(HDC hDC) {
@@ -404,4 +457,23 @@ void DevScene::Render(HDC hDC) {
 	TCHAR str[256];
 	wsprintf(str, TEXT("Mouse = (%d, %d)"), Mouse.x, Mouse.y);
 	_TEXTOUT(hDC, 800, 0, str);
+}
+
+
+BOOL DevScene::MoveTo(Vector Position) {
+	if (_TileMapActor == NULL) {
+		return FALSE;
+	}
+
+	TileMap* M = _TileMapActor->GetTileMap();
+	if (M == NULL) { return FALSE; }
+
+	Tile* Target = M->GetTileAt(Position);
+	if (Target == NULL) { return FALSE; }
+
+	return Target->Number != TILETYPE::WALL;
+}
+
+Vector DevScene::Convert(Vector Position) {
+
 }

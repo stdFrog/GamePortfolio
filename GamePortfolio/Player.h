@@ -8,6 +8,14 @@ enum class PlayerState {
 	Skill
 };
 
+enum DIRECTION {
+	DIRECTION_NONE,
+	DIRECTION_LEFT,
+	DIRECTION_UP,
+	DIRECTION_RIGHT,
+	DIRECTION_DOWN
+};
+
 /* 여기부터 컨텐츠 코드
 
 	이곳에 컴포넌트 형태로 카메라 오브젝트를 설계하고 업데이트를 이용할 것인가?
@@ -17,23 +25,44 @@ class Player : public FlipbookActor
 {
 	using Super = FlipbookActor;
 
-	Flipbook* _FlipbookUp = NULL;
-	Flipbook* _FlipbookDown = NULL;
-	Flipbook* _FlipbookLeft = NULL;
-	Flipbook* _FlipbookRight = NULL;
+	Flipbook* _FlipbookIdle[4];
+	Flipbook* _FlipbookMove[4];
+	Flipbook* _FlipbookAttack[4];
 
 	PlayerState _State = PlayerState::Jump;
 
 	/* 작업을 나누기 위해 이런 식으로 함수 단위로 나누어 관리하는 것도 좋다. */
 
-	void SetState(PlayerState State) { _State = State; }
+	void SetState(PlayerState State);
 	PlayerState GetState() { return _State; }
+
+	void SetDirection(DIRECTION Direction);
+
+private:
+	BOOL MoveTo(Vector Position);
+	Vector Convert(Vector Position);
+
+	void SetCellPosition(Vector Position);
+
+private:
+	virtual void UpdateIdle(float);
+	virtual void UpdateMove(float);
+	virtual void UpdateSkill(float);
 
 private:
 	void UpdateInput(float);
 	void UpdateGravity(float);
+	void UpdateAnimation();
+
+private:
 	virtual void UpdateMoveScript(float);
 	virtual void UpdateJumpScript(float);
+
+public:
+	Vector _CellPosition;
+	Vector _Destination;
+	DIRECTION _Direction = DIRECTION_NONE;
+	BOOL _KeyPressed = FALSE;
 
 public:
 	virtual void OnComponentBeginOverlap(Collider*, Collider*);

@@ -29,6 +29,10 @@ public:
 	class TileMapActor* _TileMapActor;
 
 public:
+	BOOL MoveTo(Vector Position);
+	Vector Convert(Vector Position);
+
+public:
 	virtual BOOL Initialize();
 	virtual void Update(float);
 	virtual void Render(HDC);

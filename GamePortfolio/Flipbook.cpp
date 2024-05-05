@@ -2,7 +2,6 @@
 #include "Flipbook.h"
 
 Flipbook::Flipbook() {
-
 }
 
 Flipbook::~Flipbook() {

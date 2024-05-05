@@ -151,6 +151,7 @@ BOOL DevScene::Initialize() {
 			AppendCollider(collider);
 			collider->SetCollisionLayer(CLT_OBJECT);
 			collider->SetCollisionFlagLayer((COLLISION_LAYER_TYPE)(CLT_WALL | CLT_OBJECT));
+			collider->SetVisible(FALSE);
 			player->AppendComponent(collider);
 		}
 
@@ -475,5 +476,18 @@ BOOL DevScene::MoveTo(Vector Position) {
 }
 
 Vector DevScene::Convert(Vector Position) {
+	Vector Result;
 
+	if (_TileMapActor == NULL) { return Result; }
+
+	TileMap* M = _TileMapActor->GetTileMap();
+	if (M == NULL) { return Result; }
+
+	INT Size = M->GetTileSize();
+	Vector TilePosition = _TileMapActor->GetPosition();
+
+	Result.x = TilePosition.x + Position.x * Size + (Size / 2);
+	Result.y = TilePosition.y + Position.y * Size + (Size / 2);
+
+	return Result;
 }

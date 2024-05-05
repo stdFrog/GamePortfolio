@@ -8,7 +8,7 @@ class FlipbookActor : public Actor
 	using Super = Actor;
 
 protected:
-	Flipbook* _Flipbook = NULL;
+	Flipbook* _Flipbook;
 
 protected:
 	float _Time = 0.f;

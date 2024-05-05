@@ -44,7 +44,9 @@ BOOL Player::Initialize() {
 	CameraComponent* Camera = new CameraComponent();
 	AppendComponent(Camera);
 
-	SetFlipbook(_FlipbookIdle[DIRECTION_DOWN]);
+	SetState(PlayerState::Move);
+	SetState(PlayerState::Idle);
+	SetCellPosition(Vector(5.f, 5.f), TRUE);
 
 	return TRUE;
 }
@@ -142,14 +144,14 @@ void Player::Render(HDC hDC) {
 		Matrix S = ViewMatrix * _Transform.GetModelingMatrix();
 	*/
 }
-
+/*
 void Player::OnComponentBeginOverlap(Collider* I, Collider* Target) {
-	/*SetState(PlayerState::Move);
-	S = Vector(200.f, 200.f);*/
+	SetState(PlayerState::Move);
+	S = Vector(200.f, 200.f);
 }
 
 void Player::OnComponentEndOverlap(Collider* I, Collider* Target) {
-	// SetState(PlayerState::Jump);
+	SetState(PlayerState::Jump);
 }
 
 void Player::UpdateGravity(float dtSeconds) {
@@ -158,7 +160,7 @@ void Player::UpdateGravity(float dtSeconds) {
 	_Position.y += S.y * dtSeconds;
 }
 
-/* 특수 상황이 아닌 일반적인 상황에서의 입력을 처리한다. */
+특수 상황이 아닌 일반적인 상황에서의 입력을 처리한다.
 void Player::UpdateInput(float dtSeconds) {
 	const auto& Scene = dynamic_cast<DevScene*>(_Scene);
 	const auto& Engine = (GameEngine*)(Scene->GetInstance());
@@ -166,11 +168,19 @@ void Player::UpdateInput(float dtSeconds) {
 
 	if (Input.IsPressed(InputButton::A)) {
 		_Position.x -= S.x * dtSeconds;
-		SetFlipbook(_FlipbookLeft);
+		SetFlipbook(_FlipbookMove[DIRECTION_LEFT]);
 	}
 	else if (Input.IsPressed(InputButton::D)) {
 		_Position.x += S.x * dtSeconds;
-		SetFlipbook(_FlipbookRight);
+		SetFlipbook(_FlipbookMove[DIRECTION_RIGHT]);
+	}
+	else if (Input.IsPressed(InputButton::W)) {
+		_Position.y -= S.y * dtSeconds;
+		SetFlipbook(_FlipbookMove[DIRECTION_UP]);
+	}
+	else if (Input.IsPressed(InputButton::S)) {
+		_Position.y += S.y * dtSeconds;
+		SetFlipbook(_FlipbookMove[DIRECTION_DOWN]);
 	}
 }
 
@@ -178,12 +188,12 @@ void Player::UpdateMoveScript(float dtSeconds) {
 	const auto& Scene = dynamic_cast<DevScene*>(_Scene);
 	const auto& Engine = (GameEngine*)(Scene->GetInstance());
 	auto& Input = Engine->GetInputManager();
-	/*
-		상단과 하단에 충돌체가 있는 상태에서 점프를 반복할 때 밀어내는 처리로 인해 벽을 뚫는 버그가 발생한다.
-		물론, 임시 코드이기 때문에 충돌 처리가 미흡한 부분이 있을 수 밖에 없다.
+	
+	상단과 하단에 충돌체가 있는 상태에서 점프를 반복할 때 밀어내는 처리로 인해 벽을 뚫는 버그가 발생한다.
+	물론, 임시 코드이기 때문에 충돌 처리가 미흡한 부분이 있을 수 밖에 없다.
 
-		러닝 게임도 좋아하기 때문에 언젠가 한 번쯤 고생해서 만들어 볼 필요가 있다고 생각된다.
-	*/
+	러닝 게임도 좋아하기 때문에 언젠가 한 번쯤 고생해서 만들어 볼 필요가 있다고 생각된다.
+	
 	if (Input.IsPressed(InputButton::SpaceBar) && GetState() == PlayerState::Move) {
 		SetState(PlayerState::Jump);
 		S.y = -500.f;
@@ -196,8 +206,10 @@ void Player::UpdateJumpScript(float dtSeconds) {
 	auto& Input = Engine->GetInputManager();
 
 }
+*/
 
 void Player::SetState(PlayerState State) {
+	if (_State == State) { return; }
 	_State = State;
 	UpdateAnimation();
 }
@@ -283,7 +295,8 @@ void Player::UpdateIdle(float dtSeconds) {
 
 void Player::UpdateMove(float dtSeconds) {
 	Vector Dist = (_Destination - _Position);
-	if (Dist.length() < 10.f) {
+
+	if (Dist.length() < 5.f) {
 		SetState(PlayerState::Idle);
 		_Position = _Destination;
 	}
@@ -295,7 +308,6 @@ void Player::UpdateMove(float dtSeconds) {
 		case DIRECTION_DOWN:
 			_Position.y += 200.f * dtSeconds;
 			break;
-
 		case DIRECTION_LEFT:
 			_Position.x -= 200.f * dtSeconds;
 			break;
@@ -319,6 +331,32 @@ BOOL Player::MoveTo(Vector Position) {
 	return Scene->MoveTo(Position);
 }
 
-Vector Player::Convert(Vector Position) {
+void Player::SetCellPosition(Vector Position, BOOL Teleport) {
+	_CellPosition = Position;
+	
+	const auto& Scene = dynamic_cast<DevScene*>(GetScene());
+	if (Scene == NULL) { return; }
 
+	_Destination = Scene->Convert(_CellPosition);
+	if (Teleport) { _Position = _Destination; }
 }
+
+BOOL Player::HasReachedDest() {
+	Vector Dist = _Destination - _Position;
+	return Dist.length() < 10.f;
+}
+
+/*
+	여기까지가 WinAPI의 클라이언트 실습이라고 볼 수 있다.
+
+	캐릭터를 만들고 맵을 구현하고 기본적인 충돌 처리를 하는 것까지 마쳤다면 이제 서버로 넘어가야 한다.
+	D2D 또는 서버 둘 중 무언가 하나를 시작해야 하는데 어느 직무를 지원할 것인가에 따라 우선순위가 바뀌며, 결과적으론 둘 다 공부해야 한다.
+
+	D2D의 고급 기법을 배운다고 해도 거진 비슷한 수준이라고 한다.
+	다만, 과정을 따라 포폴이 세네개 정도 추가되므로 시간을 쓴 만큼 도움이 된다는 의견도 많다.
+
+	사실 Direction 2D는 WinAPI와 쉘을 공부하면서 COM과 클래스화 과정에서 이미 접해본 적 있다.
+	
+	전체적으로 구문에 변화가 생긴다는 것과 고급 기법을 배운다는 점에서 꽤 차이가 있으며,
+	그래픽 관련 함수들도 더 방대해져 부릴 수 있는 기교가 늘어난다는 점도 상당히 매력적이다.
+*/

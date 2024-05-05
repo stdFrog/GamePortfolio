@@ -9,11 +9,10 @@ enum class PlayerState {
 };
 
 enum DIRECTION {
-	DIRECTION_NONE,
-	DIRECTION_LEFT,
 	DIRECTION_UP,
-	DIRECTION_RIGHT,
-	DIRECTION_DOWN
+	DIRECTION_DOWN,
+	DIRECTION_LEFT,
+	DIRECTION_RIGHT
 };
 
 /* 여기부터 컨텐츠 코드
@@ -29,7 +28,7 @@ class Player : public FlipbookActor
 	Flipbook* _FlipbookMove[4];
 	Flipbook* _FlipbookAttack[4];
 
-	PlayerState _State = PlayerState::Jump;
+	PlayerState _State = PlayerState::Idle;
 
 	/* 작업을 나누기 위해 이런 식으로 함수 단위로 나누어 관리하는 것도 좋다. */
 
@@ -40,33 +39,36 @@ class Player : public FlipbookActor
 
 private:
 	BOOL MoveTo(Vector Position);
-	Vector Convert(Vector Position);
 
-	void SetCellPosition(Vector Position);
+	BOOL HasReachedDest();
+	void SetCellPosition(Vector Position, BOOL Teleport = FALSE);
 
 private:
 	virtual void UpdateIdle(float);
 	virtual void UpdateMove(float);
 	virtual void UpdateSkill(float);
 
+	void UpdateAnimation();
+	/*
 private:
 	void UpdateInput(float);
 	void UpdateGravity(float);
-	void UpdateAnimation();
 
 private:
 	virtual void UpdateMoveScript(float);
 	virtual void UpdateJumpScript(float);
-
-public:
-	Vector _CellPosition;
-	Vector _Destination;
-	DIRECTION _Direction = DIRECTION_NONE;
-	BOOL _KeyPressed = FALSE;
-
+	
 public:
 	virtual void OnComponentBeginOverlap(Collider*, Collider*);
 	virtual void OnComponentEndOverlap(Collider*, Collider*);
+
+	*/
+
+public:
+	DIRECTION _Direction = DIRECTION_DOWN;
+	BOOL _KeyPressed = FALSE;
+	Vector _CellPosition;
+	Vector _Destination;
 
 public:
 	Player();
@@ -76,4 +78,3 @@ public:
 	virtual void Update(float);
 	virtual void Render(HDC);
 };
-

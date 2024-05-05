@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "FlipbookActor.h"
 
-FlipbookActor::FlipbookActor(ObjectType Type) : Actor(Type) {
+FlipbookActor::FlipbookActor(ObjectType Type) : Actor(Type), _Flipbook(NULL) {
 
 }
 
@@ -20,8 +20,8 @@ void FlipbookActor::Update(float dtSeconds) {
 
 	if (_Flipbook == NULL) { return; }
 
-	const FlipbookInfo& I = _Flipbook->GetInfo();
-	if (I.loop == FALSE && _Index == I.end) { return; }
+	const FlipbookInfo I = _Flipbook->GetInfo();
+	if (I.loop <= FALSE && _Index == I.end) { return; }
 
 	_Time += dtSeconds;
 	int FrameCount = (I.end - I.start) + 1;
@@ -38,7 +38,7 @@ void FlipbookActor::Render(HDC hDC) {
 
 	if (_Flipbook == NULL) { return; }
 
-	const FlipbookInfo& I = _Flipbook->GetInfo();
+	const FlipbookInfo I = _Flipbook->GetInfo();
 	const auto& Scene = dynamic_cast<DevScene*>(_Scene);
 	Vector CameraPosition = Scene->GetMainCamera().GetTransform().GetPosition();
 

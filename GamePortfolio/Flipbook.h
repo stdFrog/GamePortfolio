@@ -7,18 +7,23 @@ struct FlipbookInfo {
 	std::wstring name;
 	Vector size;
 
-	int start = 0, end = 0, line = 0;
+	int start = 0;
+	int end = 0;
+	int line = 0;
+
 	float duration = 1.f;
 	BOOL loop = TRUE;
 };
 
 class Flipbook : public ResourceBase
 {
+public:
 	FlipbookInfo _Info;
 
 public:
 	void SetInfo(FlipbookInfo Info) { _Info = Info; }
-	const FlipbookInfo& GetInfo() { return _Info; }
+	FlipbookInfo& GetInfo() { return _Info; }
+	const FlipbookInfo& GetInfo() const { return _Info; }
 
 public:
 	Flipbook();

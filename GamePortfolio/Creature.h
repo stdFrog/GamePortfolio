@@ -1,8 +1,14 @@
 #pragma once
 
-class Monster : public Creature
+class Creature : public GameObject
 {
-	using Super = Creature;
+	using Super = GameObject;
+
+protected:
+	Status _Status;
+
+	void SetStatus(Status NewStatus) { _Status = NewStatus; }
+	const Status GetStatus() const { return _Status; }
 
 protected:
 	virtual void UpdateIdle(float) {}
@@ -12,8 +18,8 @@ protected:
 	virtual void UpdateAnimation() {}
 
 public:
-	Monster();
-	virtual ~Monster();
+	Creature(ObjectType Type = ObjectType::None);
+	virtual ~Creature();
 
 	virtual BOOL Initialize();			// Start
 	virtual void Update(float);			// Update

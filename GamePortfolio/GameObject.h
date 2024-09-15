@@ -1,5 +1,6 @@
 #pragma once
-#include "Objectinterface.h"
+// #include "Objectinterface.h"
+
 /*
 	엔진측 코드
 
@@ -17,16 +18,48 @@
 
 class Component;
 
-class GameObject : ObjectInterface
+/*
+	게임 내 등장할 요소들을 GameObject로 구분하고 기반 클래스를 FlipbookActor로 변환하였다.
+	중복 변수와 인터페이스가 사라졌다.
+*/
+class GameObject : public FlipbookActor // ObjectInterface
 {
+	using Super = FlipbookActor;
+
 protected:
-	std::vector<Component*> _Components;
+	// std::vector<Component*> _Components;
 
 public:
-	void AppendComponent(Component*);
+	// void AppendComponent(Component*);
+
+protected:
+	BOOL MoveTo(Vector Position);
+	void SetCellPosition(Vector Position, BOOL Teleport = FALSE);
+	BOOL HasReachedDest();
+
+protected:
+	DIRECTION _Direction = DIRECTION_DOWN;
+	void SetDirection(DIRECTION Direction);
+
+protected:
+	BOOL _KeyPressed = FALSE;
+	Vector _CellPosition;
+	Vector _Destination;
+	OBJECTSTATE _State = OBJECTSTATE::IDLE;
+
+protected:
+	void SetState(OBJECTSTATE State);
+	OBJECTSTATE GetState() { return _State; }
+
+protected:
+	virtual void UpdateIdle(float) {}
+	virtual void UpdateMove(float) {}
+	virtual void UpdateSkill(float) {}
+	
+	virtual void UpdateAnimation() {}
 
 public:
-	GameObject();
+	GameObject(ObjectType Type = ObjectType::None);
 	virtual ~GameObject();
 
 	virtual BOOL Initialize();			// Start

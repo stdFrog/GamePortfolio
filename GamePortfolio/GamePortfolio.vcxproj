@@ -135,6 +135,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h" />
+    <ClInclude Include="Arrow.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="CameraObject.h" />
@@ -143,6 +144,7 @@
     <ClInclude Include="Component.h" />
     <ClInclude Include="ContentsButton.h" />
     <ClInclude Include="ContentsPanel.h" />
+    <ClInclude Include="Creature.h" />
     <ClInclude Include="DevScene.h" />
     <ClInclude Include="EditScene.h" />
     <ClInclude Include="EngineHeaders.h" />
@@ -155,6 +157,7 @@
     <ClInclude Include="GamePortfolio.h" />
     <ClInclude Include="GameRenderer.h" />
     <ClInclude Include="GameScene.h" />
+    <ClInclude Include="HitEffect.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="Matrix.h" />
@@ -166,6 +169,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerMoveScript.h" />
+    <ClInclude Include="Projectile.h" />
     <ClInclude Include="RectCollider.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="BaseScene.h" />
@@ -187,6 +191,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="Arrow.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="CameraComponent.cpp" />
     <ClCompile Include="CameraObject.cpp" />
@@ -195,6 +200,7 @@
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ContentsButton.cpp" />
     <ClCompile Include="ContentsPanel.cpp" />
+    <ClCompile Include="Creature.cpp" />
     <ClCompile Include="DevScene.cpp" />
     <ClCompile Include="EditScene.cpp" />
     <ClCompile Include="Flipbook.cpp" />
@@ -205,6 +211,7 @@
     <ClCompile Include="GamePortfolio.cpp" />
     <ClCompile Include="GameRenderer.cpp" />
     <ClCompile Include="GameScene.cpp" />
+    <ClCompile Include="HitEffect.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="Matrix.cpp" />
@@ -218,6 +225,7 @@
     <ClCompile Include="BaseScene.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerMoveScript.cpp" />
+    <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="RectCollider.cpp" />
     <ClCompile Include="ResourceBase.cpp" />
     <ClCompile Include="ResourceManager.cpp" />

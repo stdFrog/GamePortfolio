@@ -1,6 +1,6 @@
 #include "pch.h"
 
-ObjectInterface::ObjectInterface(ObjectType Type) : _Type(Type){
+ObjectInterface::ObjectInterface(ObjectType Type) : _Type(Type), _bInitialized(FALSE) {
 
 }
 

@@ -1,8 +1,8 @@
 #pragma once
 
-class Monster : public Creature
+class Projectile : public GameObject
 {
-	using Super = Creature;
+	using Super = GameObject;
 
 protected:
 	virtual void UpdateIdle(float) {}
@@ -12,8 +12,8 @@ protected:
 	virtual void UpdateAnimation() {}
 
 public:
-	Monster();
-	virtual ~Monster();
+	Projectile();
+	virtual ~Projectile();
 
 	virtual BOOL Initialize();			// Start
 	virtual void Update(float);			// Update

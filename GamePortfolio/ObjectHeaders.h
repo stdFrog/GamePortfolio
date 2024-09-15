@@ -5,7 +5,14 @@
 #include "SpriteActor.h"
 #include "FlipbookActor.h"
 #include "TileMapActor.h"
+#include "GameObject.h"
 
-#include "Monster.h"
-#include "Missile.h"
+#include "Creature.h"
 #include "Player.h"
+#include "Monster.h"
+
+#include "Projectile.h"
+#include "Missile.h"
+#include "Arrow.h"
+
+#include "HitEffect.h"

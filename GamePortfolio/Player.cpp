@@ -12,8 +12,12 @@
 */
 Vector S(200.f,200.f), G(1000.f, 1000.f);
 
-Player::Player() : FlipbookActor(ObjectType::Player) {
-
+Player::Player() : Creature(ObjectType::Player) {
+	for (int i = 0; i < 4; i++) {
+		_FlipbookIdle[i] = 0;
+		_FlipbookMove[i] = 0;
+		_FlipbookAttack[i] = 0;
+	}
 }
 
 Player::~Player() {
@@ -44,8 +48,8 @@ BOOL Player::Initialize() {
 	CameraComponent* Camera = new CameraComponent();
 	AppendComponent(Camera);
 
-	SetState(PlayerState::Move);
-	SetState(PlayerState::Idle);
+	SetState(OBJECTSTATE::MOVE);
+	SetState(OBJECTSTATE::IDLE);
 	SetCellPosition(Vector(5.f, 5.f), TRUE);
 
 	return TRUE;
@@ -55,15 +59,15 @@ void Player::Update(float dtSeconds) {
 	Super::Update(dtSeconds);
 
 	switch (_State) {
-	case PlayerState::Idle:
+	case OBJECTSTATE::IDLE:
 		UpdateIdle(dtSeconds);
 		break;
 
-	case PlayerState::Move:
+	case OBJECTSTATE::MOVE:
 		UpdateMove(dtSeconds);
 		break;
 
-	case PlayerState::Skill:
+	case OBJECTSTATE::SKILL:
 		UpdateSkill(dtSeconds);
 		break;
 	}
@@ -72,11 +76,11 @@ void Player::Update(float dtSeconds) {
 	UpdateInput(dtSeconds);
 
 	switch (GetState()) {
-	case PlayerState::Move:
+	case OBJECTSTATE::Move:
 		UpdateMoveScript(dtSeconds);
 		break;
 
-	case PlayerState::Jump:
+	case OBJECTSTATE::Jump:
 		UpdateJumpScript(dtSeconds);
 		break;
 	}*/
@@ -146,16 +150,16 @@ void Player::Render(HDC hDC) {
 }
 /*
 void Player::OnComponentBeginOverlap(Collider* I, Collider* Target) {
-	SetState(PlayerState::Move);
+	SetState(OBJECTSTATE::Move);
 	S = Vector(200.f, 200.f);
 }
 
 void Player::OnComponentEndOverlap(Collider* I, Collider* Target) {
-	SetState(PlayerState::Jump);
+	SetState(OBJECTSTATE::Jump);
 }
 
 void Player::UpdateGravity(float dtSeconds) {
-	if (GetState() == PlayerState::Move) { return; }
+	if (GetState() == OBJECTSTATE::Move) { return; }
 	S.y += G.y * dtSeconds;
 	_Position.y += S.y * dtSeconds;
 }
@@ -194,8 +198,8 @@ void Player::UpdateMoveScript(float dtSeconds) {
 
 	러닝 게임도 좋아하기 때문에 언젠가 한 번쯤 고생해서 만들어 볼 필요가 있다고 생각된다.
 	
-	if (Input.IsPressed(InputButton::SpaceBar) && GetState() == PlayerState::Move) {
-		SetState(PlayerState::Jump);
+	if (Input.IsPressed(InputButton::SpaceBar) && GetState() == OBJECTSTATE::Move) {
+		SetState(OBJECTSTATE::Jump);
 		S.y = -500.f;
 	}
 }
@@ -208,20 +212,18 @@ void Player::UpdateJumpScript(float dtSeconds) {
 }
 */
 
-void Player::SetState(PlayerState State) {
+/*
+	PlayerState에서 ObjectState로 변경되었으며 기반 클래스에서 함수를 정의함
+void Player::SetState(OBJECTSTATE State) {
 	if (_State == State) { return; }
 	_State = State;
 	UpdateAnimation();
 }
-
-void Player::SetDirection(DIRECTION Direction) {
-	_Direction = Direction;
-	UpdateAnimation();
-}
+*/
 
 void Player::UpdateAnimation() {
 	switch (_State) {
-	case PlayerState::Idle:
+	case OBJECTSTATE::IDLE:
 		if (_KeyPressed) {
 			SetFlipbook(_FlipbookMove[_Direction]);
 		}
@@ -230,11 +232,11 @@ void Player::UpdateAnimation() {
 		}
 		break;
 
-	case PlayerState::Move:
+	case OBJECTSTATE::MOVE:
 		SetFlipbook(_FlipbookMove[_Direction]);
 		break;
 
-	case PlayerState::Skill:
+	case OBJECTSTATE::SKILL:
 		SetFlipbook(_FlipbookAttack[_Direction]);
 		break;
 	}
@@ -255,7 +257,7 @@ void Player::UpdateIdle(float dtSeconds) {
 		Vector Next = _CellPosition + Delta[_Direction];
 		if (MoveTo(Next)) {
 			SetCellPosition(Next);
-			SetState(PlayerState::Move);
+			SetState(OBJECTSTATE::MOVE);
 		}
 	}
 	else if (Input.IsPressed(InputButton::S)) {
@@ -264,7 +266,7 @@ void Player::UpdateIdle(float dtSeconds) {
 		Vector Next = _CellPosition + Delta[_Direction];
 		if (MoveTo(Next)) {
 			SetCellPosition(Next);
-			SetState(PlayerState::Move);
+			SetState(OBJECTSTATE::MOVE);
 		}
 	}
 	else if (Input.IsPressed(InputButton::A)) {
@@ -273,7 +275,7 @@ void Player::UpdateIdle(float dtSeconds) {
 		Vector Next = _CellPosition + Delta[_Direction];
 		if (MoveTo(Next)) {
 			SetCellPosition(Next);
-			SetState(PlayerState::Move);
+			SetState(OBJECTSTATE::MOVE);
 		}
 	}
 	else if (Input.IsPressed(InputButton::D)) {
@@ -282,12 +284,12 @@ void Player::UpdateIdle(float dtSeconds) {
 		Vector Next = _CellPosition + Delta[_Direction];
 		if (MoveTo(Next)) {
 			SetCellPosition(Next);
-			SetState(PlayerState::Move);
+			SetState(OBJECTSTATE::MOVE);
 		}
 	}
 	else {
 		_KeyPressed = FALSE;
-		if (_State == PlayerState::Idle) {
+		if (_State == OBJECTSTATE::IDLE) {
 			UpdateAnimation();
 		}
 	}
@@ -297,7 +299,7 @@ void Player::UpdateMove(float dtSeconds) {
 	Vector Dist = (_Destination - _Position);
 
 	if (Dist.length() < 5.f) {
-		SetState(PlayerState::Idle);
+		SetState(OBJECTSTATE::IDLE);
 		_Position = _Destination;
 	}
 	else {
@@ -322,6 +324,7 @@ void Player::UpdateSkill(float dtSeconds) {
 
 }
 
+/*
 BOOL Player::MoveTo(Vector Position) {
 	const auto& Scene = dynamic_cast<DevScene*>(GetScene());
 	const auto& Engine = (GameEngine*)Scene->GetInstance();
@@ -340,11 +343,8 @@ void Player::SetCellPosition(Vector Position, BOOL Teleport) {
 	_Destination = Scene->Convert(_CellPosition);
 	if (Teleport) { _Position = _Destination; }
 }
+*/
 
-BOOL Player::HasReachedDest() {
-	Vector Dist = _Destination - _Position;
-	return Dist.length() < 10.f;
-}
 
 /*
 	여기까지가 WinAPI의 클라이언트 실습이라고 볼 수 있다.

@@ -140,6 +140,14 @@ public:
 		return *this;
 	}
 
+	BOOL operator ==(const Vector& Other) {
+		return (x == Other.x && y == Other.y);
+	}
+
+	BOOL operator !=(const Vector& Other) {
+		return !(*this == Other);
+	}
+
 	float Dot(const Vector& Other) const {
 		return x * Other.x + y * Other.y + z * Other.z;
 	}

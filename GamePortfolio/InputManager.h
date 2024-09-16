@@ -24,6 +24,8 @@ enum class InputButton
     NUM_1 = '1',
     NUM_2 = '2',
     NUM_3 = '3',
+    NUM_4 = '3',
+    NUM_5 = '3',
 
     W = 'W',
     A = 'A',

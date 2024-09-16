@@ -72,3 +72,12 @@ void FlipbookActor::Reset() {
 	_Time = 0.f;
 	_Index = 0;
 }
+
+BOOL FlipbookActor::IsAnimationEnded() {
+	if (_Flipbook == NULL) { return TRUE; }
+
+	const FlipbookInfo& Info = _Flipbook->GetInfo();
+	if (Info.loop == FALSE && _Index == Info.end) { return TRUE; }
+
+	return FALSE;
+}

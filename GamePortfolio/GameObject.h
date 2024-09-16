@@ -32,9 +32,7 @@ protected:
 public:
 	// void AppendComponent(Component*);
 
-protected:
 	BOOL MoveTo(Vector Position);
-	void SetCellPosition(Vector Position, BOOL Teleport = FALSE);
 	BOOL HasReachedDest();
 
 protected:
@@ -42,10 +40,13 @@ protected:
 	void SetDirection(DIRECTION Direction);
 
 protected:
-	BOOL _KeyPressed = FALSE;
 	Vector _CellPosition;
 	Vector _Destination;
 	OBJECTSTATE _State = OBJECTSTATE::IDLE;
+
+public:
+	void SetCellPosition(Vector Position, BOOL Teleport = FALSE);
+	Vector GetCellPosition() { return _CellPosition; }
 
 protected:
 	void SetState(OBJECTSTATE State);

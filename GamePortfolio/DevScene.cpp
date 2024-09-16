@@ -22,17 +22,17 @@ BOOL DevScene::Initialize() {
 	const auto& Engine = (GameEngine*)_EngineInstance;
 
 	Engine->LoadTexture(L"Stage01", L"Sprite\\Map\\Stage01.bmp");
-	// Engine->LoadTexture(L"Sword", L"Sprite\\Item\\Sword.bmp");
 	Engine->LoadTexture(L"Potion", L"Sprite\\UI\\Mp.bmp");
 	Engine->LoadTexture(L"PlayerDown", L"Sprite\\Player\\PlayerDown.bmp", RGB(128, 128, 128));
 	Engine->LoadTexture(L"PlayerUp", L"Sprite\\Player\\PlayerUp.bmp", RGB(128, 128, 128));
 	Engine->LoadTexture(L"PlayerLeft", L"Sprite\\Player\\PlayerLeft.bmp", RGB(128, 128, 128));
 	Engine->LoadTexture(L"PlayerRight", L"Sprite\\Player\\PlayerRight.bmp", RGB(128, 128, 128));
 	Engine->LoadTexture(L"Start", L"Sprite\\UI\\Start.bmp");
+	Engine->LoadTexture(L"Snake", L"Sprite\\Monster\\Snake.bmp", RGB(128, 128, 128));
+	Engine->LoadTexture(L"Hit", L"Sprite\\Effect\\Hit.bmp", RGB(0,0,0));
 	Engine->LoadTexture(L"Edit", L"Sprite\\UI\\Edit.bmp");
 	Engine->LoadTexture(L"Exit", L"Sprite\\UI\\Exit.bmp");
 	Engine->LoadTexture(L"Tile", L"Sprite\\Map\\Tile.bmp", RGB(128, 128, 128));
-
 	Engine->CreateSprite(L"Stage01", Engine->GetTexture(L"Stage01"));
 	Engine->CreateSprite(L"Tile_O", Engine->GetTexture(L"Tile"), 0, 0, 48,48);
 	Engine->CreateSprite(L"Tile_X", Engine->GetTexture(L"Tile"), 48, 0, 48, 48);
@@ -43,92 +43,12 @@ BOOL DevScene::Initialize() {
 	Engine->CreateSprite(L"Exit_Off", Engine->GetTexture(L"Exit"), 0, 0, 150, 150);
 	Engine->CreateSprite(L"Exit_On", Engine->GetTexture(L"Exit"), 150, 0, 150, 150);
 
-	/* IDLE */
-	{
-		Texture* T = Engine->GetTexture(L"PlayerUp");
-		Flipbook* F = Engine->CreateFlipbook(L"FB_IdleUp");
-		F->SetInfo({ T, L"FB_IdleUp", Vector(200, 200), 0, 9, 0, 0.5f});
-	}
-
-	{
-		Texture* T = Engine->GetTexture(L"PlayerDown");
-		Flipbook* F = Engine->CreateFlipbook(L"FB_IdleDown");
-		F->SetInfo({ T, L"FB_IdleDown", Vector(200, 200), 0, 9, 0, 0.5f });
-	}
-
-	{
-		Texture* T = Engine->GetTexture(L"PlayerLeft");
-		Flipbook* F = Engine->CreateFlipbook(L"FB_IdleLeft");
-		F->SetInfo({ T, L"FB_IdleLeft", Vector(200, 200), 0, 9, 0, 0.5f });
-	}
-
-	{
-		Texture* T = Engine->GetTexture(L"PlayerRight");
-		Flipbook* F = Engine->CreateFlipbook(L"FB_IdleRight");
-		F->SetInfo({ T, L"FB_IdleRight", Vector(200, 200), 0, 9, 0, 0.5f });
-	}
-
-	/* MOVE */
-	{
-		Texture* T = Engine->GetTexture(L"PlayerUp");
-		Flipbook* F = Engine->CreateFlipbook(L"FB_MoveUp");
-		F->SetInfo({ T, L"FB_MoveUp", Vector(200, 200), 0, 9, 1, 0.5f });
-	}
-
-	{
-		Texture* T = Engine->GetTexture(L"PlayerDown");
-		Flipbook* F = Engine->CreateFlipbook(L"FB_MoveDown");
-		F->SetInfo({ T, L"FB_MoveDown", Vector(200, 200), 0, 9, 1, 0.5f });
-	}
-
-	{
-		Texture* T = Engine->GetTexture(L"PlayerLeft");
-		Flipbook* F = Engine->CreateFlipbook(L"FB_MoveLeft");
-		F->SetInfo({ T, L"FB_MoveLeft", Vector(200, 200), 0, 9, 1, 0.5f });
-	}
-
-	{
-		Texture* T = Engine->GetTexture(L"PlayerRight");
-		Flipbook* F = Engine->CreateFlipbook(L"FB_MoveRight");
-		F->SetInfo({ T, L"FB_MoveRight", Vector(200, 200), 0, 9, 1, 0.5f });
-	}
-
-	/* Attack */
-	{
-		Texture* T = Engine->GetTexture(L"PlayerUp");
-		Flipbook* F = Engine->CreateFlipbook(L"FB_AttackUp");
-		F->SetInfo({ T, L"FB_AttackUp", Vector(200, 200), 0, 7, 3, 0.5f });
-	}
-
-	{
-		Texture* T = Engine->GetTexture(L"PlayerDown");
-		Flipbook* F = Engine->CreateFlipbook(L"FB_AttackDown");
-		F->SetInfo({ T, L"FB_AttackDown", Vector(200, 200), 0, 7, 3, 0.5f });
-	}
-
-	{
-		Texture* T = Engine->GetTexture(L"PlayerLeft");
-		Flipbook* F = Engine->CreateFlipbook(L"FB_AttackLeft");
-		F->SetInfo({ T, L"FB_AttackLeft", Vector(200, 200), 0, 7, 3, 0.5f });
-	}
-
-	{
-		Texture* T = Engine->GetTexture(L"PlayerRight");
-		Flipbook* F = Engine->CreateFlipbook(L"FB_AttackRight");
-		F->SetInfo({ T, L"FB_AttackRight", Vector(200, 200), 0, 7, 3, 0.5f });
-	}
-
-	{
-		Sprite* Temp = Engine->GetSprite(L"Stage01");
-		
-		SpriteActor* background = CreateActor<SpriteActor>();
-		background->SetSprite(Temp);
-		background->SetLayerType(LAYER_BACKGROUND);
-		const Vector Size = Temp->GetSize();
-		background->SetPosition(Vector(Size.x, Size.y));
-		
-		AppendActor(background);
-	}
+	LoadMap();
+	LoadPlayer();
+	LoadMonster();
+	LoadProjectile();
+	LoadEffect();
+	LoadTilemap();
 
 	{
 		/*
@@ -142,6 +62,7 @@ BOOL DevScene::Initialize() {
 
 			확실히 코드가 길어지긴 한다.
 		*/
+		/*
 		Player* player = CreateActor<Player>();
 		{
 			// CircleCollider* collider = new CircleCollider;
@@ -156,6 +77,12 @@ BOOL DevScene::Initialize() {
 		}
 
 		AppendActor(player);
+		*/
+	}
+
+	{
+		SpawnObject<Player>(Vector(5, 5));
+		SpawnObject<Monster>(Vector(7, 7));
 	}
 
 	{
@@ -253,26 +180,6 @@ BOOL DevScene::Initialize() {
 	/*for (UI* ui : _UserInterfaces) {
 		ui->Initialize();
 	}*/
-	
-	{
-		/*
-			타일맵의 경우 충돌 처리 등의 용도로도 쓰이므로 빠른 검색이 가능해야 한다.
-			씬에 임시 포인터를 두고 디버깅용으로 사용한다.
-		*/
-		TileMapActor* NewTileMapActor = CreateActor<TileMapActor>();
-		AppendActor(NewTileMapActor);
-		_TileMapActor = NewTileMapActor;
-		{
-			auto* M = Engine->CreateTileMap(L"TileMap_01");
-			M->SetMapSize(Vector(63, 43));
-			M->SetTileSize(48);
-
-			Engine->LoadTileMap(L"TileMap_01", L"Tilemap\\Tilemap01_RESTORE.txt");
-			_TileMapActor->SetTileMap(M);
-			// _TileMapActor->SetVisible(TRUE);
-			_TileMapActor->SetVisible(FALSE);
-		}
-	}
 
 	/*
 		현재는 실습을 간단히 하기 위해 소리와 관련된 기능을 검색하여 끌어다 쓴다.
@@ -303,7 +210,10 @@ BOOL DevScene::Initialize() {
 		}
 	*/
 
-	Super::Initialize();
+	/*
+		SpawnObject 함수 추가 이후 Initialize를 자동으로 호출하므로 아래 구문이 더 이상 필요없다.
+		Super::Initialize();
+	*/
 
 	/*
 		상용 게임엔진에서 등장인물을 관리하는 방법에 대해 알아보자.
@@ -473,6 +383,11 @@ BOOL DevScene::MoveTo(Vector Position) {
 	Tile* Target = M->GetTileAt(Position);
 	if (Target == NULL) { return FALSE; }
 
+	/* 몬스터와의 충돌 처리 - 개선 필요 */
+	if (GetCreatureAt(Position) != NULL) {
+		return FALSE;
+	}
+
 	return Target->Number != TILETYPE::WALL;
 }
 
@@ -491,4 +406,229 @@ Vector DevScene::Convert(Vector Position) {
 	Result.y = TilePosition.y + Position.y * Size + (Size / 2);
 
 	return Result;
+}
+
+void DevScene::LoadMap() {
+	const auto& Engine = (GameEngine*)_EngineInstance;
+
+	Sprite* Temp = Engine->GetSprite(L"Stage01");
+
+	SpriteActor* background = CreateActor<SpriteActor>();
+	background->SetSprite(Temp);
+	background->SetLayerType(LAYER_BACKGROUND);
+	const Vector Size = Temp->GetSize();
+	background->SetPosition(Vector(Size.x, Size.y));
+
+	AppendActor(background);
+}
+
+void DevScene::LoadPlayer() {
+	const auto& Engine = (GameEngine*)_EngineInstance;
+
+	/* IDLE */
+	{
+		Texture* T = Engine->GetTexture(L"PlayerUp");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_IdleUp");
+		F->SetInfo({ T, L"FB_IdleUp", Vector(200, 200), 0, 9, 0, 0.5f });
+	}
+
+	{
+		Texture* T = Engine->GetTexture(L"PlayerDown");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_IdleDown");
+		F->SetInfo({ T, L"FB_IdleDown", Vector(200, 200), 0, 9, 0, 0.5f });
+	}
+
+	{
+		Texture* T = Engine->GetTexture(L"PlayerLeft");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_IdleLeft");
+		F->SetInfo({ T, L"FB_IdleLeft", Vector(200, 200), 0, 9, 0, 0.5f });
+	}
+
+	{
+		Texture* T = Engine->GetTexture(L"PlayerRight");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_IdleRight");
+		F->SetInfo({ T, L"FB_IdleRight", Vector(200, 200), 0, 9, 0, 0.5f });
+	}
+
+	/* MOVE */
+	{
+		Texture* T = Engine->GetTexture(L"PlayerUp");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_MoveUp");
+		F->SetInfo({ T, L"FB_MoveUp", Vector(200, 200), 0, 9, 1, 0.5f });
+	}
+
+	{
+		Texture* T = Engine->GetTexture(L"PlayerDown");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_MoveDown");
+		F->SetInfo({ T, L"FB_MoveDown", Vector(200, 200), 0, 9, 1, 0.5f });
+	}
+
+	{
+		Texture* T = Engine->GetTexture(L"PlayerLeft");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_MoveLeft");
+		F->SetInfo({ T, L"FB_MoveLeft", Vector(200, 200), 0, 9, 1, 0.5f });
+	}
+
+	{
+		Texture* T = Engine->GetTexture(L"PlayerRight");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_MoveRight");
+		F->SetInfo({ T, L"FB_MoveRight", Vector(200, 200), 0, 9, 1, 0.5f });
+	}
+
+	/* Attack */
+	{
+		Texture* T = Engine->GetTexture(L"PlayerUp");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_AttackUp");
+		F->SetInfo({ T, L"FB_AttackUp", Vector(200, 200), 0, 7, 3, 0.5f, FALSE });
+	}
+
+	{
+		Texture* T = Engine->GetTexture(L"PlayerDown");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_AttackDown");
+		F->SetInfo({ T, L"FB_AttackDown", Vector(200, 200), 0, 7, 3, 0.5f, FALSE });
+	}
+
+	{
+		Texture* T = Engine->GetTexture(L"PlayerLeft");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_AttackLeft");
+		F->SetInfo({ T, L"FB_AttackLeft", Vector(200, 200), 0, 7, 3, 0.5f, FALSE });
+	}
+
+	{
+		Texture* T = Engine->GetTexture(L"PlayerRight");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_AttackRight");
+		F->SetInfo({ T, L"FB_AttackRight", Vector(200, 200), 0, 7, 3, 0.5f, FALSE });
+	}
+
+	/* Bow */
+	{
+		Texture* T = Engine->GetTexture(L"PlayerUp");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_BowUp");
+		F->SetInfo({ T, L"FB_BowUp", Vector(200, 200), 0, 7, 5, 0.5f, FALSE });
+	}
+
+	{
+		Texture* T = Engine->GetTexture(L"PlayerDown");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_BowDown");
+		F->SetInfo({ T, L"FB_BowDown", Vector(200, 200), 0, 7, 5, 0.5f, FALSE });
+	}
+
+	{
+		Texture* T = Engine->GetTexture(L"PlayerLeft");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_BowLeft");
+		F->SetInfo({ T, L"FB_BowLeft", Vector(200, 200), 0, 7, 5, 0.5f, FALSE });
+	}
+
+	{
+		Texture* T = Engine->GetTexture(L"PlayerRight");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_BowRight");
+		F->SetInfo({ T, L"FB_BowRight", Vector(200, 200), 0, 7, 5, 0.5f, FALSE });
+	}
+
+	/* Staff */
+	{
+		Texture* T = Engine->GetTexture(L"PlayerUp");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_StaffUp");
+		F->SetInfo({ T, L"FB_StaffUp", Vector(200, 200), 0, 10, 6, 0.5f, FALSE });
+	}
+
+	{
+		Texture* T = Engine->GetTexture(L"PlayerDown");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_StaffDown");
+		F->SetInfo({ T, L"FB_StaffDown", Vector(200, 200), 0, 10, 6, 0.5f, FALSE });
+	}
+
+	{
+		Texture* T = Engine->GetTexture(L"PlayerLeft");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_StaffLeft");
+		F->SetInfo({ T, L"FB_StaffLeft", Vector(200, 200), 0, 10, 6, 0.5f, FALSE });
+	}
+
+	{
+		Texture* T = Engine->GetTexture(L"PlayerRight");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_StaffRight");
+		F->SetInfo({ T, L"FB_StaffRight", Vector(200, 200), 0, 10, 6, 0.5f, FALSE });
+	}
+}
+
+void DevScene::LoadMonster() {
+	const auto& Engine = (GameEngine*)_EngineInstance;
+
+	/* Move */
+	{
+		Texture* T = Engine->GetTexture(L"Snake");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_SnakeUp");
+		F->SetInfo({ T, L"FB_SnakeUp", Vector(100, 100), 0, 3, 3, 0.5f});
+	}
+	{
+		Texture* T = Engine->GetTexture(L"Snake");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_SnakeDown");
+		F->SetInfo({ T, L"FB_SnakeDown", Vector(100, 100), 0, 3, 3, 0.5f });
+	}
+	{
+		Texture* T = Engine->GetTexture(L"Snake");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_SnakeLeft");
+		F->SetInfo({ T, L"FB_SnakeLeft", Vector(100, 100), 0, 3, 3, 0.5f });
+	}
+	{
+		Texture* T = Engine->GetTexture(L"Snake");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_SnakeRight");
+		F->SetInfo({ T, L"FB_SnakeRight", Vector(100, 100), 0, 3, 3, 0.5f });
+	}
+}
+
+void DevScene::LoadProjectile() {
+	const auto& Engine = (GameEngine*)_EngineInstance;
+
+	/* Move */
+	{
+		Texture* T = Engine->GetTexture(L"Arrow");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_ArrowUp");
+		F->SetInfo({ T, L"FB_ArrowUp", Vector(100, 100), 0, 0, 3, 0.5f });
+	}
+	{
+		Texture* T = Engine->GetTexture(L"Arrow");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_ArrowDown");
+		F->SetInfo({ T, L"FB_ArrowDown", Vector(100, 100), 0, 0, 0, 0.5f });
+	}
+	{
+		Texture* T = Engine->GetTexture(L"Arrow");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_ArrowLeft");
+		F->SetInfo({ T, L"FB_ArrowLeft", Vector(100, 100), 0, 0, 1, 0.5f });
+	}
+	{
+		Texture* T = Engine->GetTexture(L"Arrow");
+		Flipbook* F = Engine->CreateFlipbook(L"FB_ArrowRight");
+		F->SetInfo({ T, L"FB_ArrowRight", Vector(100, 100), 0, 0, 2, 0.5f });
+	}
+}
+
+void DevScene::LoadEffect() {
+	const auto& Engine = (GameEngine*)_EngineInstance;
+
+	Texture* T = Engine->GetTexture(L"Hit");
+	Flipbook* F = Engine->CreateFlipbook(L"FB_Hit");
+	F->SetInfo({ T, L"FB_Hit", Vector(50, 47), 0, 5, 0, 0.5f, FALSE });
+}
+
+void DevScene::LoadTilemap() {
+	const auto& Engine = (GameEngine*)_EngineInstance;
+
+	/*
+		타일맵의 경우 충돌 처리 등의 용도로도 쓰이므로 빠른 검색이 가능해야 한다.
+		씬에 임시 포인터를 두고 디버깅용으로 사용한다.
+	*/
+	TileMapActor* NewTileMapActor = CreateActor<TileMapActor>();
+	AppendActor(NewTileMapActor);
+	_TileMapActor = NewTileMapActor;
+	{
+		auto* M = Engine->CreateTileMap(L"TileMap_01");
+		M->SetMapSize(Vector(63, 43));
+		M->SetTileSize(48);
+
+		Engine->LoadTileMap(L"TileMap_01", L"Tilemap\\Tilemap01_RESTORE.txt");
+		_TileMapActor->SetTileMap(M);
+		// _TileMapActor->SetVisible(TRUE);
+		_TileMapActor->SetVisible(FALSE);
+	}
 }

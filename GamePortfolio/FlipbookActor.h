@@ -17,6 +17,7 @@ protected:
 public:
 	void SetFlipbook(Flipbook*);
 	void Reset();
+	BOOL IsAnimationEnded();
 
 public:
 	FlipbookActor(ObjectType Type = ObjectType::None);

@@ -156,7 +156,7 @@ BOOL GameEngine::Initialize(HWND hWnd /*, std::filepath::path ResourcePath*/) {
     }
 
     /*
-        SondManager->GetInstance()->Init(hWnd);
+        SoundManager->GetInstance()->Init(hWnd);
     */
 
     _bAllInitialized = (_bSceneReady && _bInputInitialized && _bResourceReady);

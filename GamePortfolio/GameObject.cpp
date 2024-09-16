@@ -36,6 +36,20 @@ void GameObject::Update(float dtSeconds) {
 		comp->Update(dtSeconds);
 	}
 	*/
+	
+	switch (_State) {
+	case OBJECTSTATE::IDLE:
+		UpdateIdle(dtSeconds);
+		break;
+
+	case OBJECTSTATE::MOVE:
+		UpdateMove(dtSeconds);
+		break;
+
+	case OBJECTSTATE::SKILL:
+		UpdateSkill(dtSeconds);
+		break;
+	}
 }
 
 void GameObject::Render(HDC hDC) {

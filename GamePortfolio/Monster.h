@@ -4,12 +4,14 @@ class Monster : public Creature
 {
 	using Super = Creature;
 
-protected:
-	virtual void UpdateIdle(float) {}
-	virtual void UpdateMove(float) {}
-	virtual void UpdateSkill(float) {}
+private:
+	Flipbook* _FlipbookMove[4];
 
-	virtual void UpdateAnimation() {}
+protected:
+	virtual void UpdateIdle(float);
+	virtual void UpdateMove(float);
+	virtual void UpdateSkill(float);
+	virtual void UpdateAnimation();
 
 public:
 	Monster();

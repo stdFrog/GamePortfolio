@@ -28,6 +28,26 @@ protected:
 	std::vector<Actor*> _Actors[LAYER_TYPE_LAST_COUNT];
 	std::vector<Panel*> _GUIPanels;
 
+public:
+	Creature* GetCreatureAt(Vector TargetCellPosition);
+
+public:
+	template<typename T>
+	T* SpawnObject(Vector NewPosition) {
+		/* Type-Trait */
+		auto IsGameObject = std::is_convertible_v<T*, GameObject*>;
+		assert(IsGameObject);
+
+		T* NewGameObject = new T();
+		NewGameObject->SetScene(this);
+		NewGameObject->SetCellPosition(NewPosition, TRUE);
+		AppendActor(NewGameObject);
+
+		NewGameObject->Initialize();
+
+		return NewGameObject;
+	}
+
 private:
 	// 씬 마다 카메라를 활용하는 방법이 다를 수 있다.
 	CameraObject _MainCamera;

@@ -23,10 +23,12 @@ class DevScene : public BaseScene
 	LONG iWidth, iHeight;
 
 public:
-	DevScene();
-	virtual ~DevScene();
-
-	class TileMapActor* _TileMapActor;
+	void LoadMap();
+	void LoadPlayer();
+	void LoadMonster();
+	void LoadProjectile();
+	void LoadEffect();
+	void LoadTilemap();
 
 public:
 	BOOL MoveTo(Vector Position);
@@ -36,4 +38,10 @@ public:
 	virtual BOOL Initialize();
 	virtual void Update(float);
 	virtual void Render(HDC);
+
+public:
+	DevScene();
+	virtual ~DevScene();
+
+	class TileMapActor* _TileMapActor;
 };

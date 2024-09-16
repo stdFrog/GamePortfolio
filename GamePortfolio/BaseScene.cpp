@@ -12,6 +12,7 @@ BOOL BaseScene::Initialize() {
 	/* 타일맵 제작을 위해 추상화 클래스를 일반 클래스로 변경 */
 	
 	/* 게임 시작 이후 가져야 할 자원을 최상위 클래스에서 관리한다. */
+	
 	for (const std::vector<Actor*>& type : _Actors) {
 		for (Actor* actor : type) {
 			actor->Initialize();
@@ -72,6 +73,11 @@ void BaseScene::Update(float dtSeconds) {
 }
 
 void BaseScene::Render(HDC hDC) {
+	std::vector<Actor*>& Actors = _Actors[LAYER_OBJECT];
+	std::sort(Actors.begin(), Actors.end(), [=](Actor* a, Actor* b) {
+		return a->GetPosition().y < b->GetPosition().y;
+	});
+
 	for (const std::vector<Actor*>& type : _Actors) {
 		for (Actor* actor : type) {
 			actor->Render(hDC);
@@ -184,4 +190,16 @@ BOOL BaseScene::RemoveUIPanel(Panel* Target) {
 	_GUIPanels.erase(findIt);
 
 	return TRUE;
+}
+
+Creature* BaseScene::GetCreatureAt(Vector TargetCellPosition) {
+	/* 단순한 방법 (Big(O): n )*/
+	for (Actor* A : _Actors[LAYER_OBJECT]) {
+		Creature* C = dynamic_cast<Creature*>(A);
+		if (C && C->GetCellPosition() == TargetCellPosition) {
+			return C;
+		}
+	}
+
+	return NULL;
 }

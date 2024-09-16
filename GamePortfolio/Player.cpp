@@ -27,7 +27,7 @@ Player::~Player() {
 BOOL Player::Initialize() {
 	Super::Initialize();
 	
-	const auto& Scene = dynamic_cast<DevScene*>(_Scene);
+	const auto& Scene = dynamic_cast<DevScene*>(GetScene());
 	const auto& Engine = (GameEngine*)(Scene->GetInstance());
 
 	_FlipbookIdle[DIRECTION_UP] = Engine->GetFlipbook(L"FB_IdleUp");
@@ -45,12 +45,21 @@ BOOL Player::Initialize() {
 	_FlipbookAttack[DIRECTION_LEFT] = Engine->GetFlipbook(L"FB_AttackLeft");
 	_FlipbookAttack[DIRECTION_RIGHT] = Engine->GetFlipbook(L"FB_AttackRight");
 
+	_FlipbookBow[DIRECTION_UP] = Engine->GetFlipbook(L"FB_BowUp");
+	_FlipbookBow[DIRECTION_DOWN] = Engine->GetFlipbook(L"FB_BowDown");
+	_FlipbookBow[DIRECTION_LEFT] = Engine->GetFlipbook(L"FB_BowLeft");
+	_FlipbookBow[DIRECTION_RIGHT] = Engine->GetFlipbook(L"FB_BowRight");
+
+	_FlipbookStaff[DIRECTION_UP] = Engine->GetFlipbook(L"FB_StaffUp");
+	_FlipbookStaff[DIRECTION_DOWN] = Engine->GetFlipbook(L"FB_StaffDown");
+	_FlipbookStaff[DIRECTION_LEFT] = Engine->GetFlipbook(L"FB_StaffLeft");
+	_FlipbookStaff[DIRECTION_RIGHT] = Engine->GetFlipbook(L"FB_StaffRight");
+
 	CameraComponent* Camera = new CameraComponent();
 	AppendComponent(Camera);
 
 	SetState(OBJECTSTATE::MOVE);
 	SetState(OBJECTSTATE::IDLE);
-	SetCellPosition(Vector(5.f, 5.f), TRUE);
 
 	return TRUE;
 }
@@ -58,6 +67,7 @@ BOOL Player::Initialize() {
 void Player::Update(float dtSeconds) {
 	Super::Update(dtSeconds);
 
+	/*
 	switch (_State) {
 	case OBJECTSTATE::IDLE:
 		UpdateIdle(dtSeconds);
@@ -70,7 +80,7 @@ void Player::Update(float dtSeconds) {
 	case OBJECTSTATE::SKILL:
 		UpdateSkill(dtSeconds);
 		break;
-	}
+	}*/
 
 	/*UpdateGravity(dtSeconds);
 	UpdateInput(dtSeconds);
@@ -237,7 +247,15 @@ void Player::UpdateAnimation() {
 		break;
 
 	case OBJECTSTATE::SKILL:
-		SetFlipbook(_FlipbookAttack[_Direction]);
+		if (_WeaponType == WEAPONTYPE::SWORD) {
+			SetFlipbook(_FlipbookAttack[_Direction]);
+		}
+		else if (_WeaponType == WEAPONTYPE::BOW) {
+			SetFlipbook(_FlipbookBow[_Direction]);
+		}
+		else if(_WeaponType == WEAPONTYPE::STAFF) {
+			SetFlipbook(_FlipbookStaff[_Direction]);
+		}
 		break;
 	}
 }
@@ -251,6 +269,7 @@ void Player::UpdateIdle(float dtSeconds) {
 	const auto& Engine = (GameEngine*)Scene->GetInstance();
 	auto& Input = Engine->GetInputManager();
 
+	/* 온라인 게임으로 변환할 때 코드 전체가 변한다. */
 	if (Input.IsPressed(InputButton::W)) {
 		SetDirection(DIRECTION_UP);
 
@@ -293,6 +312,20 @@ void Player::UpdateIdle(float dtSeconds) {
 			UpdateAnimation();
 		}
 	}
+
+	if (Input.IsPressed(InputButton::NUM_1)) {
+		SetWeaponType(WEAPONTYPE::SWORD);
+	}
+	else if (Input.IsPressed(InputButton::NUM_2)) {
+		SetWeaponType(WEAPONTYPE::BOW);
+	}
+	else if (Input.IsPressed(InputButton::NUM_3)) {
+		SetWeaponType(WEAPONTYPE::STAFF);
+	}
+
+	if (Input.IsPressed(InputButton::SpaceBar)) {
+		SetState(OBJECTSTATE::SKILL);
+	}
 }
 
 void Player::UpdateMove(float dtSeconds) {
@@ -321,7 +354,17 @@ void Player::UpdateMove(float dtSeconds) {
 }
 
 void Player::UpdateSkill(float dtSeconds) {
+	if (_Flipbook == NULL) { return; }
+	
+	if (IsAnimationEnded()) {
+		// 피격 판정 등
 
+
+
+
+
+		SetState(OBJECTSTATE::IDLE);
+	}
 }
 
 /*

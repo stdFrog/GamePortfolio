@@ -43,7 +43,7 @@ enum class OBJECTSTATE {
 	OBJECT_STATE_COUNT
 };
 
-enum class WEAPONETYPE {
+enum class WEAPONTYPE {
 	SWORD,
 	BOW,
 	STAFF,

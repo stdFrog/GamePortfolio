@@ -29,6 +29,8 @@ class Player : public Creature // FlipbookActor
 	Flipbook* _FlipbookIdle[4];
 	Flipbook* _FlipbookMove[4];
 	Flipbook* _FlipbookAttack[4];
+	Flipbook* _FlipbookBow[4];
+	Flipbook* _FlipbookStaff[4];
 
 	// OBJECTSTATE _State = OBJECTSTATE::IDLE;
 
@@ -54,6 +56,14 @@ private:
 	virtual void UpdateSkill(float);
 
 	void UpdateAnimation();
+
+private:
+	BOOL _KeyPressed = FALSE;
+	WEAPONTYPE _WeaponType = WEAPONTYPE::SWORD;
+
+public:
+	void SetWeaponType(WEAPONTYPE NewWeaponType) { _WeaponType = NewWeaponType; }
+	WEAPONTYPE GetWeaponType() { return _WeaponType; }
 
 public:
 	Player();
